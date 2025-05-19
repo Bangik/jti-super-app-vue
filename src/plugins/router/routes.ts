@@ -82,6 +82,21 @@ export const routes = [
           },
         ],
       },
+      {
+        path: '/study-program',
+        name: 'study-program',
+        children: [
+          {
+            path: '',
+            name: 'study-program.index',
+            component: () => import('@/pages/study-program/IndexStudyProgram.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Program Studi',
+            },
+          },
+        ],
+      },
     ],
   },
   {

@@ -17,7 +17,10 @@ defineProps<{
       <VIcon icon="ri-menu-line" />
     </IconBtn>
 
-    <LinkBack v-if="$route.name !== 'major.index'" class="mr-3"/>
+    <LinkBack
+      v-if="$route.name !== 'major.index' && $route.name !== 'study-program.index'"
+      class="mr-3"
+    />
 
     <h2 class="font-weight-medium leading-normal text-xl">{{ $route.meta.title }}</h2>
 

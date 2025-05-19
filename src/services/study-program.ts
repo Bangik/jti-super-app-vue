@@ -5,7 +5,7 @@ import type { StudyProgramList } from '@/types/study-program'
 
 export async function getStudyProgram(
   PageQuery: PageQueryType,
-  majorId: string,
+  majorId?: string,
 ): Promise<ResponseType<StudyProgramList[]>> {
   const response = await axiosInstance.get(`/study-programs`, {
     params: { ...PageQuery, major_id: majorId },

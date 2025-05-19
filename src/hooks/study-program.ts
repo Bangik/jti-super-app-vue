@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { StudyProgramValues } from '@/constants/forms/study-program'
 
-export const useGetStudyProgram = (pageQuery: Ref<PageQueryType>, majorId: string) => {
+export const useGetStudyProgram = (pageQuery: Ref<PageQueryType>, majorId?: string) => {
   return useQuery<ResponseType<StudyProgramList[]>, Error>({
     queryKey: ['study-programs', pageQuery, majorId],
     queryFn: () => getStudyProgram(pageQuery.value, majorId),

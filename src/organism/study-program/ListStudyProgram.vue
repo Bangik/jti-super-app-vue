@@ -26,7 +26,7 @@ const pageQuery = ref<PageQueryType>({
   last_page: 1,
 })
 
-const { data, isLoading, isFetching, error } = useGetStudyProgram(pageQuery, route.params.majorId as string)
+const { data, isLoading, isFetching, error } = useGetStudyProgram(pageQuery, route.params.majorId as string | undefined)
 const { mutateAsync, isPending, isSuccess } = useDeleteStudyProgram()
 watch(
   () => data.value,
