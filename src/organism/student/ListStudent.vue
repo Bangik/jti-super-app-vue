@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { watchDebounced } from '@vueuse/core'
-import { headers } from '@/constants/tables/class.ts'
-import { useDeleteClass, useGetClass } from '@/hooks/class'
+import { headers } from '@/constants/tables/student'
+import { useGetStudent } from '@/hooks/student'
 import type { PageQueryType, SortItem } from '@/types'
-import ModalAddEdit from '@/organism/class/ModalAddEdit.vue'
-import ModalConfirmation from '@/components/modal/ModalConfirmation.vue'
-import type { ClassList } from '@/types/class'
+import type { StudentList } from '@/types/student'
 
 const route = useRoute()
 const last_page = ref(1)
@@ -15,7 +12,7 @@ const selected = reactive({
   type: '' as 'edit' | 'delete' | 'add',
   open: false,
   dialog: false,
-  selectedClass: {} as ClassList,
+  selectedStudent: {} as StudentList,
 })
 
 const pageQuery = ref<PageQueryType>({
@@ -26,8 +23,8 @@ const pageQuery = ref<PageQueryType>({
   last_page: 1,
 })
 
-const { data, isLoading, isFetching, error } = useGetClass(pageQuery, route.params.studyProgramId as string)
-const { mutateAsync, isPending, isSuccess } = useDeleteClass()
+const { data, isLoading, isFetching, error } = useGetStudent(pageQuery, route.params.classId as string)
+
 watch(
   () => data.value,
   () => {
@@ -66,35 +63,19 @@ const handleSort = (sort: Array<SortItem>) => {
   pageQuery.value.order = sort[0].order
 }
 
-const handleOpenModalDelete = (item: ClassList) => {
-  selected.selectedClass = item
+const handleOpenModalDelete = (item: StudentList) => {
+  selected.selectedStudent = item
   selected.type = 'delete'
   selected.open = true
 }
 
-const handleDelete = async () => {
-  if (!selected.selectedClass.id) {
-    return
-  }
-
-  await mutateAsync(selected.selectedClass.id)
-
-  if (isSuccess.value) {
-    handleCloseModalDelete()
-  }
-}
-
-const handleCloseModalDelete = () => {
-  selected.type = 'delete'
-  selected.open = false
-}
-
-const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: ClassList) => {
+const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
   selected.type = type
-  selected.selectedClass = data ? { ...data } : ({} as ClassList)
+  selected.selectedStudent = data ? { ...data } : ({} as StudentList)
   selected.dialog = true
 }
 </script>
+
 <template>
   <VCard>
     <div class="d-flex justify-between align-center items-center">
@@ -102,8 +83,9 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: ClassList) => {
         <VBtn
           color="primary"
           @click="handleOpenModalAddEdit('add')"
-          >Tambah Kelas</VBtn
         >
+          Tambah Mahasiswa
+        </VBtn>
       </VCardText>
       <VTextField
         v-model="search"
@@ -134,7 +116,6 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: ClassList) => {
       @update:sort-by="handleSort"
     >
       <template #item.no="{ index }">{{ index + 1 }}</template>
-
       <template #item.action="{ item }">
         <IconBtn
           @click="handleOpenModalAddEdit('edit', item)"
@@ -166,55 +147,7 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: ClassList) => {
             <span class="text-capitalize">Hapus</span>
           </VTooltip>
         </IconBtn>
-
-        <IconBtn
-          @click="
-            $router.push({
-              name: 'major.detail.study-program.detail.class.detail.student.index',
-              params: {
-                classId: item.id,
-              },
-            })
-          "
-          color="primary"
-        >
-          <VIcon icon="ri-file-list-3-line" />
-          <VTooltip
-            activator="parent"
-            open-delay="300"
-            scroll-strategy="close"
-          >
-            <span class="text-capitalize">List Mahasiswa</span>
-          </VTooltip>
-        </IconBtn>
       </template>
     </VDataTableServer>
   </VCard>
-  <ModalAddEdit
-    v-if="!isFetching || !isLoading"
-    :type="selected.type"
-    :data="selected.selectedClass"
-    v-model="selected.dialog"
-  />
-  <ModalConfirmation
-    v-model="selected.open"
-    :title="`Apakah anda ingin menghapus jurusan ${selected.selectedClass.name}?`"
-    sub-title="Jurusan yang dihapus tidak dapat dikembalikan. dan akan menghapus data yang berhubungan dengan jurusan ini. Lanjutkan?"
-  >
-    <div class="flex w-full items-center justify-between gap-3">
-      <VBtn
-        color="primary"
-        @click="handleDelete"
-        :loading="isPending"
-        >Ya</VBtn
-      >
-      <VBtn
-        color="error"
-        variant="tonal"
-        @click="handleCloseModalDelete"
-        :loading="isPending"
-        >Tidak</VBtn
-      >
-    </div>
-  </ModalConfirmation>
 </template>

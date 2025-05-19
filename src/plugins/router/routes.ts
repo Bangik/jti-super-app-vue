@@ -24,7 +24,7 @@ export const routes = [
             },
           },
           {
-            path: 'detail/:majorId',
+            path: ':majorId',
             name: 'major.detail',
             children: [
               {
@@ -41,17 +41,38 @@ export const routes = [
                     },
                   },
                   {
-                    path: 'study-program/detail/:studyProgramId',
+                    path: 'study-program/:studyProgramId',
                     name: 'major.detail.study-program.detail',
                     children: [
                       {
-                        path: 'class',
-                        name: 'major.detail.study-program.detail.class.index',
-                        component: () => import('@/pages/class/IndexClass.vue'),
-                        meta: {
-                          roles: ['admin', 'superadmin'],
-                          title: 'Kelas',
-                        },
+                        path: '',
+                        name: 'major.detail.study-program.detail.class',
+                        children: [
+                          {
+                            path: 'class',
+                            name: 'major.detail.study-program.detail.class.index',
+                            component: () => import('@/pages/class/IndexClass.vue'),
+                            meta: {
+                              roles: ['admin', 'superadmin'],
+                              title: 'Kelas',
+                            },
+                          },
+                          {
+                            path: 'class/:classId',
+                            name: 'major.detail.study-program.detail.class.detail',
+                            children: [
+                              {
+                                path: 'student',
+                                name: 'major.detail.study-program.detail.class.detail.student.index',
+                                component: () => import('@/pages/student/IndexStudent.vue'),
+                                meta: {
+                                  roles: ['admin', 'superadmin'],
+                                  title: 'Mahasiswa',
+                                },
+                              },
+                            ],
+                          },
+                        ],
                       },
                     ],
                   },
