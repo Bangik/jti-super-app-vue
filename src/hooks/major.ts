@@ -1,4 +1,4 @@
-import { addMajor, deleteMajor, getMajor, updateMajor } from '@/services/major'
+import { addMajor, deleteMajor, getMajor, getMajorAsOptions, updateMajor } from '@/services/major'
 import type { PageQueryType, ResponseType } from '@/types'
 import type { MajorList } from '@/types/major'
 import { useMutation, useQuery } from '@tanstack/vue-query'
@@ -9,6 +9,13 @@ export const useGetMajor = (pageQuery: Ref<PageQueryType>) => {
   return useQuery<ResponseType<MajorList[]>, Error>({
     queryKey: ['majors', pageQuery],
     queryFn: () => getMajor(pageQuery.value),
+  })
+}
+
+export const useGetMajorAsOptions = () => {
+  return useQuery<ResponseType<{ value: string; label: string }[]>, Error>({
+    queryKey: ['majors', 'options'],
+    queryFn: () => getMajorAsOptions(),
   })
 }
 
