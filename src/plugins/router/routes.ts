@@ -97,6 +97,21 @@ export const routes = [
           },
         ],
       },
+      {
+        path: '/class',
+        name: 'class',
+        children: [
+          {
+            path: '',
+            name: 'class.index',
+            component: () => import('@/pages/class/IndexClass.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Kelas',
+            },
+          },
+        ],
+      },
     ],
   },
   {

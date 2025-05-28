@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { StudyProgramSchema } from '@/constants/forms/study-program'
-import { useGetMajorAsOptions } from '@/hooks/major'
-import { useAddStudyProgram, useUpdateStudyProgram } from '@/hooks/study-program'
-import type { StudyProgramList } from '@/types/study-program'
+import { ClassSchema } from '@/constants/forms/class'
+import { useAddClass, useUpdateClass } from '@/hooks/class'
+import { useGetStudyProgramAsOptions } from '@/hooks/study-program'
+import type { ClassList } from '@/types/class'
 import { useForm } from 'vee-validate'
 
 interface Props {
   type?: 'add' | 'edit' | 'delete'
-  data?: StudyProgramList
+  data?: ClassList
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -17,10 +17,14 @@ const dialog = defineModel<boolean>()
 const { type } = toRefs(props)
 const id = computed(() => props.data?.id ?? '')
 
-const { data: dataListMajor, isLoading, isFetching } = useGetMajorAsOptions()
+const {
+  data: dataListStudyProgram,
+  isLoading: isLoadingStudyProgram,
+  isFetching: isFetchingStudyProgram,
+} = useGetStudyProgramAsOptions()
 
-const createMutation = useAddStudyProgram()
-const updateMutation = useUpdateStudyProgram(id)
+const createMutation = useAddClass()
+const updateMutation = useUpdateClass(id)
 const isAddMode = computed(() => type.value === 'add')
 
 const mutateAsync = computed(() => (isAddMode.value ? createMutation.mutateAsync : updateMutation.mutateAsync))
@@ -28,9 +32,9 @@ const isSuccess = computed(() => (isAddMode.value ? createMutation.isSuccess : u
 const isPending = computed(() => (isAddMode.value ? createMutation.isPending : updateMutation.isPending))
 
 const { errors, defineField, handleSubmit, resetForm, setFieldValue } = useForm({
-  validationSchema: StudyProgramSchema,
+  validationSchema: ClassSchema,
   initialValues: {
-    major_id: '',
+    study_program_id: '',
     code: '',
     name: '',
   },
@@ -38,9 +42,9 @@ const { errors, defineField, handleSubmit, resetForm, setFieldValue } = useForm(
 
 const [code] = defineField('code')
 const [name] = defineField('name')
-const [major_id] = defineField('major_id')
+const [study_program_id] = defineField('study_program_id')
 
-setFieldValue('major_id', props.data?.major?.id as string)
+setFieldValue('study_program_id', props.data?.study_program?.id as string)
 setFieldValue('code', props.data?.code as string)
 setFieldValue('name', props.data?.name as string)
 
@@ -65,15 +69,15 @@ const resetFormOnUpdate = () => {
       values: {
         code: props.data?.code,
         name: props.data?.name,
-        major_id: props.data?.major?.id ?? '',
+        study_program_id: props.data?.study_program.id ?? '',
       },
     })
   } else {
     resetForm({
       values: {
-        major_id: undefined,
         code: '',
         name: '',
+        study_program_id: undefined,
       },
     })
   }
@@ -95,28 +99,28 @@ watch(
   >
     <VCard>
       <VCardTitle>
-        <p>{{ isAddMode ? 'Tambah' : 'Edit' }} Prodi</p>
+        <p>{{ isAddMode ? 'Tambah' : 'Edit' }} Kelas</p>
       </VCardTitle>
       <VCardText>
         <VForm>
           <VRow dense>
             <VCol cols="12">
               <VAutocomplete
-                v-model="major_id"
-                :items="dataListMajor?.data"
+                v-model="study_program_id"
+                :items="dataListStudyProgram?.data"
+                :loading="isLoadingStudyProgram || isFetchingStudyProgram"
                 item-title="label"
                 item-value="value"
-                label="Pilih Jurusan"
-                :error-messages="errors.major_id"
-                clearable
+                label="Program Studi"
                 required
-                :loading="isLoading || isFetching"
+                clearable
+                :error-messages="errors.study_program_id"
               />
             </VCol>
             <VCol cols="12">
               <VTextField
                 required
-                label="Kode Prodi"
+                label="Kode Kelas"
                 v-model="code"
                 :error-messages="errors.code"
               />
@@ -124,7 +128,7 @@ watch(
             <VCol cols="12">
               <VTextField
                 required
-                label="Nama Prodi"
+                label="Nama Kelas"
                 v-model="name"
                 :error-messages="errors.name"
               />

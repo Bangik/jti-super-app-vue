@@ -1,7 +1,7 @@
 import type { StudyProgramValues } from '@/constants/forms/study-program'
 import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { StudyProgramList } from '@/types/study-program'
+import type { StudyProgramList, StudyProgramOption } from '@/types/study-program'
 
 export async function getStudyProgram(
   PageQuery: PageQueryType,
@@ -10,6 +10,11 @@ export async function getStudyProgram(
   const response = await axiosInstance.get(`/study-programs`, {
     params: { ...PageQuery, major_id: majorId },
   })
+  return response.data
+}
+
+export const getStudyProgramAsOptions = async (): Promise<ResponseType<StudyProgramOption[]>> => {
+  const response = await axiosInstance.get(`/study-programs/options`)
   return response.data
 }
 

@@ -7,3 +7,8 @@ export type StudyProgramList = {
     name: string
   }
 }
+
+export type StudyProgramOption = {
+  value: string
+  label: string
+}

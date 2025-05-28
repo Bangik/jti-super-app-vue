@@ -3,10 +3,7 @@ import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
 import type { ClassList } from '@/types/class'
 
-export async function getClass(
-  PageQuery: PageQueryType,
-  studyProgramId: string,
-): Promise<ResponseType<ClassList[]>> {
+export async function getClass(PageQuery: PageQueryType, studyProgramId?: string): Promise<ResponseType<ClassList[]>> {
   const response = await axiosInstance.get(`/classes`, {
     params: { ...PageQuery, study_program_id: studyProgramId },
   })

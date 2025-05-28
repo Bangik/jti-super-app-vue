@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { ClassValues } from '@/constants/forms/class'
 
-export const useGetClass = (pageQuery: Ref<PageQueryType>, studyProgramId: string) => {
+export const useGetClass = (pageQuery: Ref<PageQueryType>, studyProgramId?: string) => {
   return useQuery<ResponseType<ClassList[]>, Error>({
     queryKey: ['classes', pageQuery, studyProgramId],
     queryFn: () => getClass(pageQuery.value, studyProgramId),

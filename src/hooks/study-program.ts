@@ -1,4 +1,10 @@
-import { addStudyProgram, deleteStudyProgram, getStudyProgram, updateStudyProgram } from '@/services/study-program'
+import {
+  addStudyProgram,
+  deleteStudyProgram,
+  getStudyProgram,
+  getStudyProgramAsOptions,
+  updateStudyProgram,
+} from '@/services/study-program'
 import type { PageQueryType, ResponseType } from '@/types'
 import type { StudyProgramList } from '@/types/study-program'
 import { useMutation, useQuery } from '@tanstack/vue-query'
@@ -23,6 +29,13 @@ export const useAddStudyProgram = () => {
     onError: error => {
       toast.error(error.message)
     },
+  })
+}
+
+export const useGetStudyProgramAsOptions = () => {
+  return useQuery<ResponseType<{ value: string; label: string }[]>, Error>({
+    queryKey: ['study-programs', 'options'],
+    queryFn: () => getStudyProgramAsOptions(),
   })
 }
 

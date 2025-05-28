@@ -24,6 +24,14 @@ const sidebarMaster = computed(() => {
       to: '/study-program',
       roles: ['superadmin', 'admin'] as string[],
     },
+    {
+      id: 3,
+      title: 'Data Kelas',
+      disable: false,
+      hidden: false,
+      to: '/class',
+      roles: ['superadmin', 'admin'] as string[],
+    },
   ]
 })
 
