@@ -112,6 +112,21 @@ export const routes = [
           },
         ],
       },
+      {
+        path: '/session',
+        name: 'session',
+        children: [
+          {
+            path: '',
+            name: 'session.index',
+            component: () => import('@/pages/session/IndexSession.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Tahun Ajaran',
+            },
+          },
+        ],
+      },
     ],
   },
   {
