@@ -127,6 +127,21 @@ export const routes = [
           },
         ],
       },
+      {
+        path: '/semester',
+        name: 'semester',
+        children: [
+          {
+            path: '',
+            name: 'semester.index',
+            component: () => import('@/pages/semester/IndexSemester.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Semester',
+            },
+          },
+        ],
+      },
     ],
   },
   {

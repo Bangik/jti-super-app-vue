@@ -10,6 +10,11 @@ export const getSession = async (PageQuery: PageQueryType): Promise<ResponseType
   return response.data
 }
 
+export const getSessionAsOptions = async (): Promise<ResponseType<SessionList[]>> => {
+  const response = await axiosInstance.get(`/sessions/options`)
+  return response.data
+}
+
 export const addSession = async (data: SessionValues): Promise<ResponseType> => {
   const response = await axiosInstance.post(`/sessions`, data)
   return response.data
