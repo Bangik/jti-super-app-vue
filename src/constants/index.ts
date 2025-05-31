@@ -2,6 +2,14 @@ const sidebarMaster = computed(() => {
   return [
     {
       id: 1,
+      title: 'Data Karyawan',
+      disable: false,
+      hidden: false,
+      to: '/employee',
+      roles: ['superadmin', 'admin'] as string[],
+    },
+    {
+      id: 2,
       title: 'Data Jurusan',
       icon: '',
       badgeContent: '',
@@ -17,7 +25,7 @@ const sidebarMaster = computed(() => {
       roles: ['superadmin', 'admin'] as string[],
     },
     {
-      id: 2,
+      id: 3,
       title: 'Data Program Studi',
       disable: false,
       hidden: false,
@@ -25,7 +33,7 @@ const sidebarMaster = computed(() => {
       roles: ['superadmin', 'admin'] as string[],
     },
     {
-      id: 3,
+      id: 4,
       title: 'Data Kelas',
       disable: false,
       hidden: false,
@@ -33,7 +41,7 @@ const sidebarMaster = computed(() => {
       roles: ['superadmin', 'admin'] as string[],
     },
     {
-      id: 4,
+      id: 5,
       title: 'Data Tahun Ajaran',
       disable: false,
       hidden: false,
@@ -41,7 +49,7 @@ const sidebarMaster = computed(() => {
       roles: ['superadmin', 'admin'] as string[],
     },
     {
-      id: 5,
+      id: 6,
       title: 'Data Semester',
       disable: false,
       hidden: false,
