@@ -100,7 +100,7 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: EmployeeList) => {
         <VBtn
           color="primary"
           @click="handleOpenModalAddEdit('add')"
-          >Tambah Jurusan</VBtn
+          >Tambah Pegawai</VBtn
         >
       </VCardText>
       <VTextField

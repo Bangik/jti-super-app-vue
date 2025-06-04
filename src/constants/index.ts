@@ -2,7 +2,7 @@ const sidebarMaster = computed(() => {
   return [
     {
       id: 1,
-      title: 'Data Karyawan',
+      title: 'Data Pegawai',
       disable: false,
       hidden: false,
       to: '/employee',

@@ -20,7 +20,7 @@ export const routes = [
             component: () => import('@/pages/employee/IndexEmployee.vue'),
             meta: {
               roles: ['admin', 'superadmin'],
-              title: 'Karyawan',
+              title: 'Pegawai',
             },
           },
         ],
