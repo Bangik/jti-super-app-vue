@@ -87,11 +87,11 @@ const handleCloseModalDelete = () => {
   selected.open = false
 }
 
-const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: EmployeeList) => {
-  selected.type = type
-  selected.selectedEmployee = data ? { ...data } : ({} as EmployeeList)
-  selected.dialog = true
-}
+// const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: EmployeeList) => {
+//   selected.type = type
+//   selected.selectedEmployee = data ? { ...data } : ({} as EmployeeList)
+//   selected.dialog = true
+// }
 </script>
 <template>
   <VCard>
@@ -99,7 +99,7 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: EmployeeList) => {
       <VCardText>
         <VBtn
           color="primary"
-          @click="handleOpenModalAddEdit('add')"
+          @click="$router.push({ name: 'employee.create' })"
           >Tambah Pegawai</VBtn
         >
       </VCardText>

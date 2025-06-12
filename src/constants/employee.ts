@@ -1,0 +1,1 @@
+export const POSITION = ['DOSEN', 'TEKNISI', 'ADMINISTRASI']

@@ -23,6 +23,15 @@ export const routes = [
               title: 'Pegawai',
             },
           },
+          {
+            path: 'create',
+            name: 'employee.create',
+            component: () => import('@/pages/employee/IndexCreateEmployee.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Tambah Pegawai',
+            },
+          },
         ],
       },
       {
