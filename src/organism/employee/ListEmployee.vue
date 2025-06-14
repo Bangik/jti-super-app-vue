@@ -133,9 +133,29 @@ const handleCloseModalDelete = () => {
     >
       <template #item.no="{ index }">{{ index + 1 }}</template>
 
+      <template #item.name="{ item }">
+        <div class="d-flex justify-start align-center">
+          <VAvatar
+            v-if="item.avatar"
+            :image="item.avatar"
+            size="32"
+            class="mr-2"
+          ></VAvatar>
+          <VAvatar
+            v-else
+            color="primary"
+            size="32"
+            class="mr-2"
+          >
+            {{ item.name.charAt(0).toUpperCase() }}
+          </VAvatar>
+          <span class="text-capitalize">{{ item.name }}</span>
+        </div>
+      </template>
+
       <template #item.action="{ item }">
-        <!-- <IconBtn
-          @click="handleOpenModalAddEdit('edit', item)"
+        <IconBtn
+          @click="$router.push({ name: 'employee.detail', params: { employeeId: item.id } })"
           class="mr-2"
           icon="ri-pencil-line"
           color="primary"
@@ -148,7 +168,7 @@ const handleCloseModalDelete = () => {
           >
             <span class="text-capitalize">Edit</span>
           </VTooltip>
-        </IconBtn> -->
+        </IconBtn>
 
         <IconBtn
           class="mr-2"

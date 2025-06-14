@@ -107,6 +107,12 @@ export default {
     color: 'primary',
     hideDetails: 'auto',
   },
+  VDateInput: {
+    variant: 'outlined',
+    color: 'primary',
+    hideDetails: 'auto',
+    density: 'comfortable',
+  },
   VAutocomplete: {
     variant: 'outlined',
     color: 'primary',

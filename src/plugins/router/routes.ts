@@ -26,10 +26,19 @@ export const routes = [
           {
             path: 'create',
             name: 'employee.create',
-            component: () => import('@/pages/employee/IndexCreateEmployee.vue'),
+            component: () => import('@/pages/employee/IndexCreateDetailEmployee.vue'),
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Tambah Pegawai',
+            },
+          },
+          {
+            path: ':employeeId',
+            name: 'employee.detail',
+            component: () => import('@/pages/employee/IndexCreateDetailEmployee.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Detail Pegawai',
             },
           },
         ],

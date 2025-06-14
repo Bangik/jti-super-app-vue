@@ -4,7 +4,7 @@ import { EmployeeSchema } from '@/constants/forms/employee'
 import { GENDER_OPTIONS, RELIGION_OPTIONS } from '@/constants/user'
 import { useAddEmployee, useUpdateEmployee } from '@/hooks/employee'
 import { useGetMajorAsOptions } from '@/hooks/major'
-import type { Position } from '@/types/employee'
+import type { EmployeeDetail, Position } from '@/types/employee'
 import type { Gender, Religion } from '@/types/user'
 import avatar1 from '@images/avatars/avatar-1.png'
 import { useForm } from 'vee-validate'
@@ -13,20 +13,28 @@ import { VDateInput } from 'vuetify/labs/components'
 
 interface Props {
   type?: 'add' | 'edit'
+  data?: EmployeeDetail
+  isLoading?: boolean
+  isFetching?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'add',
+  data: undefined,
+  isLoading: false,
+  isFetching: false,
 })
 
 const refInputEl = ref<HTMLElement>()
 const avatarPreview = ref<string | null>(null)
+const { type } = toRefs(props)
+const id = computed(() => props.data?.id ?? '')
 const router = useRouter()
-const { data: dataListMajor, isLoading, isFetching } = useGetMajorAsOptions()
+const { data: dataListMajor, isLoading: isLoadingListMajor, isFetching: isFetchingListMajor } = useGetMajorAsOptions()
 
 const createMutation = useAddEmployee()
-const updateMutation = useUpdateEmployee(ref(''))
-const isAddMode = computed(() => props.type === 'add')
+const updateMutation = useUpdateEmployee(id)
+const isAddMode = computed(() => type.value === 'add')
 
 const mutateAsync = computed(() => (isAddMode.value ? createMutation.mutateAsync : updateMutation.mutateAsync))
 const isSuccess = computed(() => (isAddMode.value ? createMutation.isSuccess : updateMutation.isSuccess))
@@ -36,6 +44,7 @@ const { errors, defineField, handleSubmit, resetForm } = useForm({
   validationSchema: EmployeeSchema,
   initialValues: {
     m_major_id: '',
+    m_user_id: undefined as string | undefined,
     nip: '',
     name: '',
     email: '',
@@ -68,16 +77,6 @@ const [avatar] = defineField('avatar')
 const onSubmit = handleSubmit(async values => {
   if (!mutateAsync.value) return
 
-  const formData = new FormData()
-  formData.append('m_major_id', values.m_major_id)
-  formData.append('nip', values.nip)
-  formData.append('name', values.name)
-  formData.append('email', values.email)
-  formData.append('position', values.position)
-  if (values.avatar) {
-    formData.append('avatar', values.avatar)
-  }
-
   await mutateAsync.value(values)
 
   if (isSuccess.value) {
@@ -105,24 +104,47 @@ const resetAvatar = () => {
 }
 
 const resetFormOnUpdate = () => {
-  resetForm({
-    values: {
-      m_major_id: undefined,
-      nip: '',
-      name: '',
-      email: '',
-      position: undefined,
-      gender: undefined,
-      religion: undefined,
-      birth_place: '',
-      birth_date: null,
-      address: '',
-      nationality: '',
-      phone_number: '',
-      avatar: null,
-    },
-  })
-  resetAvatar()
+  if (props.type === 'edit') {
+    resetForm({
+      values: {
+        m_major_id: props.data?.major?.id,
+        m_user_id: props.data?.user?.id,
+        nip: props.data?.nip,
+        name: props.data?.user?.name,
+        email: props.data?.user?.email,
+        position: props.data?.position,
+        gender: props.data?.user?.gender,
+        religion: props.data?.user?.religion,
+        birth_place: props.data?.user?.birth_place,
+        birth_date: props.data?.user?.birth_date ? new Date(props.data.user.birth_date) : null,
+        address: props.data?.user?.address,
+        nationality: props.data?.user?.nationality,
+        phone_number: props.data?.user?.phone_number,
+        avatar: null,
+      },
+    })
+    avatarPreview.value = props.data?.user?.avatar || avatar1
+  } else {
+    resetForm({
+      values: {
+        m_major_id: undefined,
+        m_user_id: undefined,
+        nip: '',
+        name: '',
+        email: '',
+        position: undefined,
+        gender: undefined,
+        religion: undefined,
+        birth_place: '',
+        birth_date: null,
+        address: '',
+        nationality: '',
+        phone_number: '',
+        avatar: null,
+      },
+    })
+    resetAvatar()
+  }
 }
 
 watch(
@@ -196,7 +218,7 @@ watch(
                 <VAutocomplete
                   v-model="m_major_id"
                   :items="dataListMajor?.data"
-                  :loading="isLoading || isFetching"
+                  :loading="isLoadingListMajor || isFetchingListMajor || isLoading || isFetching"
                   item-title="label"
                   item-value="value"
                   label="Jurusan"
@@ -215,6 +237,7 @@ watch(
                   placeholder="Jabatan pegawai"
                   label="Jabatan"
                   :error-messages="errors.position"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
 
@@ -227,6 +250,7 @@ watch(
                   placeholder="Masukkan NIP / NIK"
                   label="NIP / NIK"
                   :error-messages="errors.nip"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
               <VCol
@@ -238,6 +262,7 @@ watch(
                   placeholder="Masukkan nama lengkap dan gelar"
                   label="Nama Lengkap"
                   :error-messages="errors.name"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
               <VCol
@@ -249,6 +274,7 @@ watch(
                   placeholder="Masukkan email pegawai"
                   label="Email"
                   :error-messages="errors.email"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
               <VCol
@@ -260,6 +286,7 @@ watch(
                   placeholder="Masukkan nomor telepon"
                   label="Nomor Telepon"
                   :error-messages="errors.phone_number"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
 
@@ -275,6 +302,7 @@ watch(
                   placeholder="Pilih jenis kelamin"
                   label="Jenis Kelamin"
                   :error-messages="errors.gender"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
               <VCol
@@ -289,6 +317,7 @@ watch(
                   placeholder="Pilih agama"
                   label="Agama"
                   :error-messages="errors.religion"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
 
@@ -301,6 +330,7 @@ watch(
                   placeholder="Masukkan tempat lahir"
                   label="Tempat Lahir"
                   :error-messages="errors.birth_place"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
               <VCol
@@ -313,6 +343,8 @@ watch(
                   v-model="birth_date"
                   placeholder="Pilih tanggal lahir"
                   label="Tanggal Lahir"
+                  :error-messages="errors.birth_date"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
 
@@ -325,6 +357,7 @@ watch(
                   placeholder="Masukkan alamat lengkap"
                   label="Alamat"
                   :error-messages="errors.address"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
               <VCol
@@ -336,6 +369,7 @@ watch(
                   placeholder="Masukkan kewarganegaraan"
                   label="Kewarganegaraan"
                   :error-messages="errors.nationality"
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
 
@@ -347,13 +381,13 @@ watch(
                   color="primary"
                   @click="onSubmit"
                   :loading="isPending.value"
-                  :disabled="isPending.value"
+                  :disabled="isPending.value || isLoading || isFetching"
                   >Simpan</VBtn
                 >
 
                 <VBtn
                   :loading="isPending.value"
-                  :disabled="isPending.value"
+                  :disabled="isPending.value || isLoading || isFetching"
                   color="secondary"
                   variant="outlined"
                   type="reset"
