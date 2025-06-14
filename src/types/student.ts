@@ -1,9 +1,19 @@
 export type StudentList = {
   id: string
-  class_id: string
   nim: string
-  generation: string | null
-  tuition_fee: number | null
-  tuition_method: string | null
   name: string
+  generation: string | null
+  class: {
+    id: string
+    name: string
+  }
+  study_program: {
+    id: string
+    name: string
+  }
+  major: {
+    id: string
+    name: string
+  }
+  avatar: string | null | undefined
 }

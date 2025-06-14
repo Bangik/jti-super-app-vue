@@ -175,6 +175,21 @@ export const routes = [
           },
         ],
       },
+      {
+        path: '/student',
+        name: 'student',
+        children: [
+          {
+            path: '',
+            name: 'student.index',
+            component: () => import('@/pages/student/IndexStudent.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Mahasiswa',
+            },
+          },
+        ],
+      },
     ],
   },
   {
