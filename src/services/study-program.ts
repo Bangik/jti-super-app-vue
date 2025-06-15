@@ -13,8 +13,10 @@ export async function getStudyProgram(
   return response.data
 }
 
-export const getStudyProgramAsOptions = async (): Promise<ResponseType<StudyProgramOption[]>> => {
-  const response = await axiosInstance.get(`/study-programs/options`)
+export const getStudyProgramAsOptions = async (majorId?: string): Promise<ResponseType<StudyProgramOption[]>> => {
+  const response = await axiosInstance.get(`/study-programs/options`, {
+    params: { major_id: majorId },
+  })
   return response.data
 }
 

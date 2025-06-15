@@ -11,3 +11,8 @@ export type ClassList = {
     name: string
   }
 }
+
+export type ClassOption = {
+  value: string
+  label: string
+}

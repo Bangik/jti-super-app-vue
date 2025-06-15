@@ -32,10 +32,11 @@ export const useAddStudyProgram = () => {
   })
 }
 
-export const useGetStudyProgramAsOptions = () => {
+export const useGetStudyProgramAsOptions = (majorId?: Ref<string>, enabled: Ref<boolean> = ref(true)) => {
   return useQuery<ResponseType<{ value: string; label: string }[]>, Error>({
-    queryKey: ['study-programs', 'options'],
-    queryFn: () => getStudyProgramAsOptions(),
+    queryKey: ['study-programs', 'options', majorId],
+    queryFn: () => getStudyProgramAsOptions(majorId?.value ?? ''),
+    enabled,
   })
 }
 

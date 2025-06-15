@@ -17,3 +17,9 @@ export type StudentList = {
   }
   avatar: string | null | undefined
 }
+
+export type FilterStudent = {
+  major_id?: string
+  study_program_id?: string
+  class_id?: string
+}

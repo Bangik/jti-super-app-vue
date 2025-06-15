@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { headers } from '@/constants/tables/student'
+import { useGetClassAsOptions } from '@/hooks/class'
+import { useGetMajorAsOptions } from '@/hooks/major'
 import { useGetStudent } from '@/hooks/student'
+import { useGetStudyProgramAsOptions } from '@/hooks/study-program'
 import type { PageQueryType, SortItem } from '@/types'
-import type { StudentList } from '@/types/student'
+import type { FilterStudent, StudentList } from '@/types/student'
 
-const route = useRoute()
 const last_page = ref(1)
 const total = ref(0)
 const search = ref('')
@@ -23,7 +25,34 @@ const pageQuery = ref<PageQueryType>({
   last_page: 1,
 })
 
-const { data, isLoading, isFetching, error } = useGetStudent(pageQuery, route.params.classId as string | undefined)
+const filter = ref<FilterStudent>({
+  major_id: undefined,
+  study_program_id: undefined,
+  class_id: undefined,
+})
+
+const shouldFetchStudyProgram = computed(() => !!filter.value.major_id)
+const shouldFetchClass = computed(() => !!filter.value.study_program_id)
+
+const { data: majorOption, isLoading: isLoadingMajor, isFetching: isFetchingMajor } = useGetMajorAsOptions()
+const {
+  data: studyProgramOptions,
+  isLoading: isLoadingStudyProgram,
+  isFetching: isFetchingStudyProgram,
+} = useGetStudyProgramAsOptions(
+  computed(() => filter.value.major_id || ''),
+  shouldFetchStudyProgram,
+)
+const {
+  data: classOptions,
+  isLoading: isLoadingClass,
+  isFetching: isFetchingClass,
+} = useGetClassAsOptions(
+  computed(() => filter.value.study_program_id || ''),
+  shouldFetchClass,
+)
+
+const { data, isLoading, isFetching, error } = useGetStudent(pageQuery)
 
 watch(
   () => data.value,
@@ -38,6 +67,34 @@ watch(
   },
   {
     immediate: true,
+  },
+)
+
+watch(
+  filter,
+  newVal => {
+    const isNotEmpty = Object.values(newVal).some(v => v) // minimal 1 filter terisi
+    if (isNotEmpty) {
+      pageQuery.value.filter = JSON.stringify(newVal)
+    } else {
+      pageQuery.value.filter = undefined
+    }
+    pageQuery.value.page = 1
+  },
+  { deep: true },
+)
+
+watch(
+  () => filter.value.major_id,
+  () => {
+    filter.value.study_program_id = undefined
+  },
+)
+
+watch(
+  () => filter.value.study_program_id,
+  () => {
+    filter.value.class_id = undefined
   },
 )
 
@@ -78,6 +135,40 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
 
 <template>
   <VCard>
+    <VCardItem>
+      <VCardTitle class="text-lg">Filter</VCardTitle>
+    </VCardItem>
+    <VCardText class="d-flex flex-wrap gap-4">
+      <VAutocomplete
+        label="Jurusan"
+        v-model="filter.major_id"
+        :items="majorOption?.data"
+        item-title="label"
+        item-value="value"
+        clearable
+        :loading="isLoadingMajor || isFetchingMajor"
+      />
+      <VAutocomplete
+        label="Program Studi"
+        v-model="filter.study_program_id"
+        :items="studyProgramOptions?.data"
+        item-title="label"
+        item-value="value"
+        clearable
+        :loading="isLoadingStudyProgram || isFetchingStudyProgram"
+        :disabled="!filter.major_id"
+      />
+      <VAutocomplete
+        label="Kelas / Golongan"
+        v-model="filter.class_id"
+        :items="classOptions?.data"
+        item-title="label"
+        item-value="value"
+        clearable
+        :loading="isLoadingClass || isFetchingClass"
+        :disabled="!filter.study_program_id"
+      />
+    </VCardText>
     <div class="d-flex justify-between align-center items-center">
       <VCardText>
         <VBtn
@@ -92,7 +183,6 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
         append-inner-icon="mdi-magnify"
         density="compact"
         label="Cari"
-        variant="solo"
         hide-details
         single-line
         max-width="300"
