@@ -2,6 +2,8 @@
 import { headers } from '@/constants/tables/student'
 import { useGetClassAsOptions } from '@/hooks/class'
 import { useGetMajorAsOptions } from '@/hooks/major'
+import { useGetSemesterAsOptions } from '@/hooks/semester'
+import { useGetSessionAsOptions } from '@/hooks/session'
 import { useGetStudent } from '@/hooks/student'
 import { useGetStudyProgramAsOptions } from '@/hooks/study-program'
 import type { PageQueryType, SortItem } from '@/types'
@@ -10,6 +12,7 @@ import type { FilterStudent, StudentList } from '@/types/student'
 const last_page = ref(1)
 const total = ref(0)
 const search = ref('')
+const sessionId = ref<string | undefined>(undefined)
 const selected = reactive({
   type: '' as 'edit' | 'delete' | 'add',
   open: false,
@@ -29,10 +32,12 @@ const filter = ref<FilterStudent>({
   major_id: undefined,
   study_program_id: undefined,
   class_id: undefined,
+  semester_id: undefined,
 })
 
 const shouldFetchStudyProgram = computed(() => !!filter.value.major_id)
 const shouldFetchClass = computed(() => !!filter.value.study_program_id)
+const shouldFetchSemester = computed(() => !!sessionId.value)
 
 const { data: majorOption, isLoading: isLoadingMajor, isFetching: isFetchingMajor } = useGetMajorAsOptions()
 const {
@@ -51,7 +56,15 @@ const {
   computed(() => filter.value.study_program_id || ''),
   shouldFetchClass,
 )
-
+const { data: sessionOptions, isLoading: isLoadingSession, isFetching: isFetchingSession } = useGetSessionAsOptions()
+const {
+  data: semesterOptions,
+  isLoading: isLoadingSemester,
+  isFetching: isFetchingSemester,
+} = useGetSemesterAsOptions(
+  computed(() => sessionId.value || ''),
+  shouldFetchSemester,
+)
 const { data, isLoading, isFetching, error } = useGetStudent(pageQuery)
 
 watch(
@@ -138,7 +151,7 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
     <VCardItem>
       <VCardTitle class="text-lg">Filter</VCardTitle>
     </VCardItem>
-    <VCardText class="d-flex flex-wrap gap-4">
+    <VCardText class="d-flex flex-wrap gap-3">
       <VAutocomplete
         label="Jurusan"
         v-model="filter.major_id"
@@ -167,6 +180,25 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
         clearable
         :loading="isLoadingClass || isFetchingClass"
         :disabled="!filter.study_program_id"
+      />
+      <VAutocomplete
+        label="Tahun Ajaran"
+        v-model="sessionId"
+        :items="sessionOptions?.data"
+        item-title="label"
+        item-value="value"
+        clearable
+        :loading="isLoadingSession || isFetchingSession"
+      />
+      <VAutocomplete
+        label="Semester"
+        v-model="filter.semester_id"
+        :items="semesterOptions?.data"
+        :item-title="item => `${item.semester} tahun ${item.year}`"
+        item-value="id"
+        clearable
+        :loading="isLoadingSemester || isFetchingSemester"
+        :disabled="!sessionId"
       />
     </VCardText>
     <div class="d-flex justify-between align-center items-center">

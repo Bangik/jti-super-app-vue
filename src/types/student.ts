@@ -22,4 +22,5 @@ export type FilterStudent = {
   major_id?: string
   study_program_id?: string
   class_id?: string
+  semester_id?: string
 }

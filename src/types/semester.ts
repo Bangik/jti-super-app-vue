@@ -11,3 +11,9 @@ export type FilterSemester = {
   session_id?: string
   year?: string
 }
+
+export type SemesterOptions = {
+  id: string
+  year: string
+  semester: string
+}

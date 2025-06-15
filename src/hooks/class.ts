@@ -1,6 +1,6 @@
 import { addClass, deleteClass, getClass, getClassAsOptions, updateClass } from '@/services/class'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { ClassList } from '@/types/class'
+import type { ClassList, ClassOption } from '@/types/class'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { ClassValues } from '@/constants/forms/class'
@@ -27,7 +27,7 @@ export const useAddClass = () => {
 }
 
 export const useGetClassAsOptions = (studyProgramId?: Ref<string>, enabled: Ref<boolean> = ref(true)) => {
-  return useQuery<ResponseType<{ value: string; label: string }[]>, Error>({
+  return useQuery<ResponseType<ClassOption[]>, Error>({
     queryKey: ['classes', 'options', studyProgramId],
     queryFn: () => {
       return getClassAsOptions(studyProgramId?.value ?? '')

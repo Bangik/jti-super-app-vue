@@ -1,6 +1,6 @@
-import { addSemester, deleteSemester, getSemester, updateSemester } from '@/services/semester'
+import { addSemester, deleteSemester, getSemester, getSemesterOptions, updateSemester } from '@/services/semester'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { SemesterList } from '@/types/semester'
+import type { SemesterList, SemesterOptions } from '@/types/semester'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { SemesterValues } from '@/constants/forms/semester'
@@ -9,6 +9,16 @@ export const useGetSemester = (pageQuery: Ref<PageQueryType>) => {
   return useQuery<ResponseType<SemesterList[]>, Error>({
     queryKey: ['semesters', pageQuery],
     queryFn: () => getSemester(pageQuery.value),
+  })
+}
+
+export const useGetSemesterAsOptions = (sessionId?: Ref<string>, enabled: Ref<boolean> = ref(true)) => {
+  return useQuery<ResponseType<SemesterOptions[]>, Error>({
+    queryKey: ['semesters', 'options', sessionId],
+    queryFn: () => {
+      return getSemesterOptions(sessionId?.value ?? '')
+    },
+    enabled,
   })
 }
 
