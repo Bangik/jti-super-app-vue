@@ -42,22 +42,6 @@ const sidebarMaster = computed(() => {
     },
     {
       id: 5,
-      title: 'Data Tahun Ajaran',
-      disable: false,
-      hidden: false,
-      to: '/session',
-      roles: ['superadmin', 'admin'] as string[],
-    },
-    {
-      id: 6,
-      title: 'Data Semester',
-      disable: false,
-      hidden: false,
-      to: '/semester',
-      roles: ['superadmin', 'admin'] as string[],
-    },
-    {
-      id: 7,
       title: 'Data Mahasiswa',
       disable: false,
       hidden: false,
@@ -67,4 +51,24 @@ const sidebarMaster = computed(() => {
   ]
 })
 
-export { sidebarMaster }
+const sidebarAcademic = computed(() => {
+  return [
+    {
+      id: 1,
+      title: 'Data Tahun Ajaran',
+      disable: false,
+      hidden: false,
+      to: '/session',
+      roles: ['superadmin', 'admin'] as string[],
+    },
+    {
+      id: 2,
+      title: 'Data Semester',
+      disable: false,
+      hidden: false,
+      to: '/semester',
+      roles: ['superadmin', 'admin'] as string[],
+    },
+  ]
+})
+export { sidebarMaster, sidebarAcademic }
