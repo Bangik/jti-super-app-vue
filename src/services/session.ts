@@ -1,7 +1,7 @@
 import type { SessionValues } from '@/constants/forms/session'
 import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { SessionList } from '@/types/session'
+import type { SessionList, SessionOption } from '@/types/session'
 
 export const getSession = async (PageQuery: PageQueryType): Promise<ResponseType<SessionList[]>> => {
   const response = await axiosInstance.get(`/sessions`, {
@@ -10,7 +10,7 @@ export const getSession = async (PageQuery: PageQueryType): Promise<ResponseType
   return response.data
 }
 
-export const getSessionAsOptions = async (): Promise<ResponseType<SessionList[]>> => {
+export const getSessionAsOptions = async (): Promise<ResponseType<SessionOption[]>> => {
   const response = await axiosInstance.get(`/sessions/options`)
   return response.data
 }

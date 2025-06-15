@@ -5,7 +5,8 @@ import { useDeleteSemester, useGetSemester } from '@/hooks/semester'
 import type { PageQueryType, SortItem } from '@/types'
 import ModalAddEdit from '@/organism/semester/ModalAddEdit.vue'
 import ModalConfirmation from '@/components/modal/ModalConfirmation.vue'
-import type { SemesterList } from '@/types/semester'
+import type { FilterSemester, SemesterList } from '@/types/semester'
+import { useGetSessionAsOptions } from '@/hooks/session'
 
 const last_page = ref(1)
 const total = ref(0)
@@ -16,6 +17,7 @@ const selected = reactive({
   dialog: false,
   selectedSemester: {} as SemesterList,
 })
+const years = ref<string[]>([])
 
 const pageQuery = ref<PageQueryType>({
   search: '',
@@ -23,8 +25,15 @@ const pageQuery = ref<PageQueryType>({
   per_page: 10,
   page: 1,
   last_page: 1,
+  filter: '',
 })
 
+const filter = ref<FilterSemester>({
+  session_id: undefined,
+  year: '',
+})
+
+const { data: dataListSession, isLoading: isLoadingSession, isFetching: isFetchingSession } = useGetSessionAsOptions()
 const { data, isLoading, isFetching, error } = useGetSemester(pageQuery)
 const { mutateAsync, isPending, isSuccess } = useDeleteSemester()
 watch(
@@ -41,6 +50,28 @@ watch(
   {
     immediate: true,
   },
+)
+
+watch(
+  filter,
+  newVal => {
+    const isNotEmpty = Object.values(newVal).some(v => v) // minimal 1 filter terisi
+    if (isNotEmpty) {
+      pageQuery.value.filter = JSON.stringify(newVal)
+    } else {
+      pageQuery.value.filter = ''
+    }
+    pageQuery.value.page = 1
+
+    years.value = []
+    if (newVal.session_id) {
+      const session = dataListSession?.value?.data?.find(item => item.value === newVal.session_id)
+      if (session) {
+        years.value = session.label.split('/')
+      }
+    }
+  },
+  { deep: true },
 )
 
 watchDebounced(
@@ -96,6 +127,31 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: SemesterList) => {
 </script>
 <template>
   <VCard>
+    <VCardItem>
+      <VCardTitle class="text-lg">Filter</VCardTitle>
+    </VCardItem>
+    <VCardText class="d-flex flex-wrap gap-4">
+      <VAutocomplete
+        label="Tahun Ajaran"
+        v-model="filter.session_id"
+        :items="dataListSession?.data"
+        item-title="label"
+        item-value="value"
+        clearable
+        :loading="isLoadingSession || isFetchingSession"
+      />
+      <VAutocomplete
+        label="Tahun"
+        v-model="filter.year"
+        :items="years"
+        :loading="isLoadingSession || isFetchingSession"
+        item-title="label"
+        item-value="value"
+        clearable
+        :disabled="!filter.session_id"
+      />
+    </VCardText>
+    <VDivider />
     <div class="d-flex justify-between align-center items-center">
       <VCardText>
         <VBtn
@@ -109,7 +165,6 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: SemesterList) => {
         append-inner-icon="mdi-magnify"
         density="compact"
         label="Cari"
-        variant="solo"
         hide-details
         single-line
         max-width="300"
@@ -176,8 +231,8 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: SemesterList) => {
   />
   <ModalConfirmation
     v-model="selected.open"
-    :title="`Apakah anda ingin menghapus jurusan ${selected.selectedSemester.semester}?`"
-    sub-title="Tahun Ajaran yang dihapus tidak dapat dikembalikan. dan akan menghapus data yang berhubungan dengan jurusan ini. Lanjutkan?"
+    :title="`Apakah anda ingin menghapus semester ${selected.selectedSemester.semester}?`"
+    sub-title="Tahun Ajaran yang dihapus tidak dapat dikembalikan. dan akan menghapus data yang berhubungan dengan semester ini. Lanjutkan?"
   >
     <div class="flex w-full items-center justify-between gap-3">
       <VBtn

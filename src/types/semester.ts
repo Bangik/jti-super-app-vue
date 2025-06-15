@@ -6,3 +6,8 @@ export type SemesterList = {
   semester: string
   session: SessionList
 }
+
+export type FilterSemester = {
+  session_id?: string
+  year?: string
+}

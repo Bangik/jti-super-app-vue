@@ -1,6 +1,6 @@
 import { addSession, deleteSession, getSession, getSessionAsOptions, updateSession } from '@/services/session'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { SessionList } from '@/types/session'
+import type { SessionList, SessionOption } from '@/types/session'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 
@@ -12,7 +12,7 @@ export const useGetSession = (pageQuery: Ref<PageQueryType>) => {
 }
 
 export const useGetSessionAsOptions = () => {
-  return useQuery<ResponseType<SessionList[]>, Error>({
+  return useQuery<ResponseType<SessionOption[]>, Error>({
     queryKey: ['sessions', 'options'],
     queryFn: () => getSessionAsOptions(),
   })
