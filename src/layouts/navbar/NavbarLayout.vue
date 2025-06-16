@@ -25,7 +25,8 @@ defineProps<{
         $route.name !== 'session.index' &&
         $route.name !== 'semester.index' &&
         $route.name !== 'employee.index' &&
-        $route.name !== 'student.index'
+        $route.name !== 'student.index' &&
+        $route.name !== 'subject.index'
       "
       class="mr-3"
     />

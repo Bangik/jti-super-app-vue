@@ -69,6 +69,14 @@ const sidebarAcademic = computed(() => {
       to: '/semester',
       roles: ['superadmin', 'admin'] as string[],
     },
+    {
+      id: 3,
+      title: 'Data Mata Kuliah',
+      disable: false,
+      hidden: false,
+      to: '/subject',
+      roles: ['superadmin', 'admin'] as string[],
+    },
   ]
 })
 export { sidebarMaster, sidebarAcademic }

@@ -190,6 +190,21 @@ export const routes = [
           },
         ],
       },
+      {
+        path: '/subject',
+        name: 'subject',
+        children: [
+          {
+            path: '',
+            name: 'subject.index',
+            component: () => import('@/pages/subject/IndexSubject.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Mata Kuliah',
+            },
+          },
+        ],
+      },
     ],
   },
   {
