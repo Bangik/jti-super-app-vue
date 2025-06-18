@@ -10,6 +10,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _, next) => {
+  document.title = (to.meta?.title as string) || 'JTI SUPER APP'
   NProgress.start()
   handleNavigation(to, next)
 })

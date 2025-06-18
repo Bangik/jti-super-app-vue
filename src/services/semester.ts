@@ -19,6 +19,11 @@ export const getSemesterOptions = async (sessionId?: string): Promise<ResponseTy
   return response.data
 }
 
+export const settingSubjectSemester = async (semesterId: string, subjectIds: string[]): Promise<ResponseType> => {
+  const response = await axiosInstance.post(`/semesters/${semesterId}/setting-subjects`, { subject_ids: subjectIds })
+  return response.data
+}
+
 export const addSemester = async (data: SemesterValues): Promise<ResponseType> => {
   const response = await axiosInstance.post(`/semesters`, data)
   return response.data

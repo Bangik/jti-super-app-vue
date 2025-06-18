@@ -6,3 +6,8 @@ export type SubjectList = {
   study_program_id: string
   status: 'ACTIVE' | 'INACTIVE'
 }
+
+export type SubjectOption = {
+  value: string
+  label: string
+}

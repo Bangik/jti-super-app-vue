@@ -1,4 +1,11 @@
-import { addSemester, deleteSemester, getSemester, getSemesterOptions, updateSemester } from '@/services/semester'
+import {
+  addSemester,
+  deleteSemester,
+  getSemester,
+  getSemesterOptions,
+  settingSubjectSemester,
+  updateSemester,
+} from '@/services/semester'
 import type { PageQueryType, ResponseType } from '@/types'
 import type { SemesterList, SemesterOptions } from '@/types/semester'
 import { useMutation, useQuery } from '@tanstack/vue-query'
@@ -19,6 +26,26 @@ export const useGetSemesterAsOptions = (sessionId?: Ref<string>, enabled: Ref<bo
       return getSemesterOptions(sessionId?.value ?? '')
     },
     enabled,
+  })
+}
+
+export const useSettingSubjectSemester = (semesterId: Ref<string>, studyProgramId: Ref<string>) => {
+  const { queryClient, toast } = useMutationResources()
+  return useMutation({
+    mutationFn: (subjectIds: string[]) => settingSubjectSemester(semesterId.value, subjectIds),
+    onMutate: async (updatedData: string[]) => {
+      await queryClient.cancelQueries({ queryKey: ['semesters', semesterId] })
+      return updatedData
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['semesters'] })
+      queryClient.invalidateQueries({ queryKey: ['subjects', 'options', studyProgramId, semesterId] })
+      queryClient.invalidateQueries({ queryKey: ['subjects', 'options', studyProgramId, null] })
+      toast.success('Mata kuliah berhasil disetting')
+    },
+    onError: error => {
+      toast.error(error.message)
+    },
   })
 }
 

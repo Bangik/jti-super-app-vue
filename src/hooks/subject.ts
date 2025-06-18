@@ -1,6 +1,6 @@
-import { addSubject, deleteSubject, getSubject, updateSubject } from '@/services/subject'
+import { addSubject, deleteSubject, getSubject, getSubjectAsOptions, updateSubject } from '@/services/subject'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { SubjectList } from '@/types/subject'
+import type { SubjectList, SubjectOption } from '@/types/subject'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { SubjectValues } from '@/constants/forms/subject'
@@ -9,6 +9,18 @@ export const useGetSubject = (pageQuery: Ref<PageQueryType>) => {
   return useQuery<ResponseType<SubjectList[]>, Error>({
     queryKey: ['subjects', pageQuery],
     queryFn: () => getSubject(pageQuery.value),
+  })
+}
+
+export const useGetSubjectAsOptions = (
+  studyProgramId?: Ref<string>,
+  semesterId?: Ref<string>,
+  enabled: Ref<boolean> = ref(true),
+) => {
+  return useQuery<ResponseType<SubjectOption[]>, Error>({
+    queryKey: ['subjects', 'options', studyProgramId, semesterId],
+    queryFn: () => getSubjectAsOptions(studyProgramId?.value ?? '', semesterId?.value ?? ''),
+    enabled,
   })
 }
 

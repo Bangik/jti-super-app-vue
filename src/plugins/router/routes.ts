@@ -9,6 +9,9 @@ export const routes = [
         path: 'dashboard',
         name: 'dashboard.index',
         component: () => import('@/pages/home/IndexHome.vue'),
+        meta: {
+          title: 'Dashboard',
+        },
       },
       {
         path: '/employee',
@@ -201,6 +204,15 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Mata Kuliah',
+            },
+          },
+          {
+            path: 'setting',
+            name: 'subject.setting',
+            component: () => import('@/pages/subject/SettingSubject.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Pengaturan Mata Kuliah',
             },
           },
         ],
