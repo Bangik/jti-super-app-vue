@@ -8,6 +8,11 @@ export type EmployeeList = {
   avatar: string | null
 }
 
+export type EmployeeOption = {
+  value: string
+  label: string
+}
+
 export type EmployeeDetail = {
   id: string
   nip: string

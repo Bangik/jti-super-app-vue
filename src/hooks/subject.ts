@@ -1,6 +1,14 @@
-import { addSubject, deleteSubject, getSubject, getSubjectAsOptions, updateSubject } from '@/services/subject'
+import {
+  addSubject,
+  deleteSubject,
+  getLectureOnSubject,
+  getSubject,
+  getSubjectAsOptions,
+  storeLectureOnSubject,
+  updateSubject,
+} from '@/services/subject'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { SubjectList, SubjectOption } from '@/types/subject'
+import type { LectureOnSubject, SelectedLectureData, SubjectList, SubjectOption } from '@/types/subject'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { SubjectValues } from '@/constants/forms/subject'
@@ -21,6 +29,32 @@ export const useGetSubjectAsOptions = (
     queryKey: ['subjects', 'options', studyProgramId, semesterId],
     queryFn: () => getSubjectAsOptions(studyProgramId?.value ?? '', semesterId?.value ?? ''),
     enabled,
+  })
+}
+
+export const useGetLectureOnSubject = (
+  studyProgramId?: Ref<string>,
+  semesterId?: Ref<string>,
+  enabled: Ref<boolean> = ref(true),
+) => {
+  return useQuery<ResponseType<LectureOnSubject[]>, Error>({
+    queryKey: ['subjects', 'lectures', studyProgramId, semesterId],
+    queryFn: () => getLectureOnSubject(studyProgramId?.value ?? '', semesterId?.value ?? ''),
+    enabled,
+  })
+}
+
+export const useStoreLectureOnSubject = () => {
+  const { queryClient, toast } = useMutationResources()
+  return useMutation({
+    mutationFn: (data: SelectedLectureData) => storeLectureOnSubject(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subjects', 'lectures'] })
+      toast.success('Dosen pengampu berhasil disimpan')
+    },
+    onError: error => {
+      toast.error(error.message)
+    },
   })
 }
 

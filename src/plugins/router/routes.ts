@@ -215,6 +215,15 @@ export const routes = [
               title: 'Pengaturan Mata Kuliah',
             },
           },
+          {
+            path: 'lecture',
+            name: 'subject.lecture',
+            component: () => import('@/pages/subject/SettingLecture.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Pengaturan Pengampu Matkul',
+            },
+          },
         ],
       },
     ],

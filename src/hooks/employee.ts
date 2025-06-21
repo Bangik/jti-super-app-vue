@@ -1,6 +1,13 @@
-import { addEmployee, deleteEmployee, getEmployee, getEmployeeById, updateEmployee } from '@/services/employee'
+import {
+  addEmployee,
+  deleteEmployee,
+  getEmployee,
+  getEmployeeAsOptions,
+  getEmployeeById,
+  updateEmployee,
+} from '@/services/employee'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { EmployeeDetail, EmployeeList } from '@/types/employee'
+import type { EmployeeDetail, EmployeeList, EmployeeOption, Position } from '@/types/employee'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { EmployeeValues } from '@/constants/forms/employee'
@@ -9,6 +16,18 @@ export const useGetEmployee = (pageQuery: Ref<PageQueryType>) => {
   return useQuery<ResponseType<EmployeeList[]>, Error>({
     queryKey: ['employees', pageQuery],
     queryFn: () => getEmployee(pageQuery.value),
+  })
+}
+
+export const useGetEmployeeAsOptions = (
+  majorId?: Ref<string>,
+  position?: Ref<Position>,
+  enabled: Ref<boolean> = ref(true),
+) => {
+  return useQuery<ResponseType<EmployeeOption[]>, Error>({
+    queryKey: ['employees', 'options', majorId, position],
+    queryFn: () => getEmployeeAsOptions(majorId?.value ?? '', position?.value ?? ('' as Position)),
+    enabled,
   })
 }
 
