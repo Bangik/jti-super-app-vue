@@ -202,8 +202,16 @@ watch(
                 />
               </VBtn>
             </div>
-
-            <p class="text-body-1 mb-0">Format yang diizinkan: JPG, GIF, atau PNG. Ukuran maksimum 2MB</p>
+            <p class="text-body-1 mb-0">
+              Format yang diizinkan: JPG, GIF, atau PNG. Ukuran maksimum 2MB
+              <VAlert
+                v-if="errors.avatar"
+                type="error"
+                variant="tonal"
+              >
+                {{ errors.avatar }}
+              </VAlert>
+            </p>
           </div>
         </VCardText>
 

@@ -104,7 +104,7 @@ watch(
   >
     <VCard>
       <VCardTitle>
-        <p>{{ isAddMode ? 'Tambah' : 'Edit' }} Mata Kuliah {{ study_program_id }}</p>
+        <p>{{ isAddMode ? 'Tambah' : 'Edit' }} Mata Kuliah</p>
       </VCardTitle>
       <VCardText>
         <VForm>

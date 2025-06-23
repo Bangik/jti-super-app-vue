@@ -46,7 +46,13 @@ setFieldValue('semester', props.data?.semester as string)
 
 const onSubmit = handleSubmit(async values => {
   if (!mutateAsync.value) return
-  await mutateAsync.value(values)
+
+  const submitValues = {
+    ...values,
+    year: parseInt(values.year, 10),
+  }
+
+  await mutateAsync.value(submitValues)
 
   if (isSuccess.value) {
     resetForm()
@@ -103,7 +109,7 @@ watch(
             <VCol cols="12">
               <VAutocomplete
                 required
-                label="Session"
+                label="Tahun Ajaran"
                 v-model="session_id"
                 :error-messages="errors.session_id"
                 :items="dataListSession?.data"
@@ -116,7 +122,7 @@ watch(
             <VCol cols="12">
               <VTextField
                 required
-                label="Tahun Ajaran"
+                label="Tahun"
                 v-model="year"
                 :error-messages="errors.year"
               />
