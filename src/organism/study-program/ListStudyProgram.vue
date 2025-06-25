@@ -170,7 +170,7 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudyProgramList) =
         <IconBtn
           @click="
             $router.push({
-              name: 'major.detail.study-program.detail.class.index',
+              name: 'major.detail.study-program.detail.student.index',
               params: {
                 studyProgramId: item.id,
               },
@@ -184,7 +184,7 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudyProgramList) =
             open-delay="300"
             scroll-strategy="close"
           >
-            <span class="text-capitalize">List Kelas</span>
+            <span class="text-capitalize">List Mahasiswa</span>
           </VTooltip>
         </IconBtn>
       </template>

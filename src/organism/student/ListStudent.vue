@@ -2,7 +2,7 @@
 import { headers } from '@/constants/tables/student'
 import { useGetStudent } from '@/hooks/student'
 import type { PageQueryType, SortItem } from '@/types'
-import type { StudentList } from '@/types/student'
+import type { FilterStudent, StudentList } from '@/types/student'
 
 const route = useRoute()
 const last_page = ref(1)
@@ -15,15 +15,22 @@ const selected = reactive({
   selectedStudent: {} as StudentList,
 })
 
+const filter = ref<FilterStudent>({
+  major_id: route.params.majorId as string | undefined,
+  study_program_id: route.params.studyProgramId as string | undefined,
+  semester_id: route.params.semesterId as string | undefined,
+})
+
 const pageQuery = ref<PageQueryType>({
   search: '',
   sort: '',
   per_page: 10,
   page: 1,
   last_page: 1,
+  filter: JSON.stringify(filter.value),
 })
 
-const { data, isLoading, isFetching, error } = useGetStudent(pageQuery, route.params.classId as string)
+const { data, isLoading, isFetching, error } = useGetStudent(pageQuery)
 
 watch(
   () => data.value,

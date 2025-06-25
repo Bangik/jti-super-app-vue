@@ -8,6 +8,6 @@ const route = useRoute()
 
 <template>
   <p class="text-lg mb-6">List Mahasiswa</p>
-  <ListStudent v-if="route.name === 'major.detail.study-program.detail.class.detail.student.index'" />
+  <ListStudent v-if="route.name === 'major.detail.study-program.detail.student.index'" />
   <ListStudentIndex v-if="route.name === 'student.index'" />
 </template>

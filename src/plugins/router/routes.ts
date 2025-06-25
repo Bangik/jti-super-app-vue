@@ -81,34 +81,13 @@ export const routes = [
                     name: 'major.detail.study-program.detail',
                     children: [
                       {
-                        path: '',
-                        name: 'major.detail.study-program.detail.class',
-                        children: [
-                          {
-                            path: 'class',
-                            name: 'major.detail.study-program.detail.class.index',
-                            component: () => import('@/pages/class/IndexClass.vue'),
-                            meta: {
-                              roles: ['admin', 'superadmin'],
-                              title: 'Kelas',
-                            },
-                          },
-                          {
-                            path: 'class/:classId',
-                            name: 'major.detail.study-program.detail.class.detail',
-                            children: [
-                              {
-                                path: 'student',
-                                name: 'major.detail.study-program.detail.class.detail.student.index',
-                                component: () => import('@/pages/student/IndexStudent.vue'),
-                                meta: {
-                                  roles: ['admin', 'superadmin'],
-                                  title: 'Mahasiswa',
-                                },
-                              },
-                            ],
-                          },
-                        ],
+                        path: 'student',
+                        name: 'major.detail.study-program.detail.student.index',
+                        component: () => import('@/pages/student/IndexStudent.vue'),
+                        meta: {
+                          roles: ['admin', 'superadmin'],
+                          title: 'Mahasiswa',
+                        },
                       },
                     ],
                   },
@@ -129,21 +108,6 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Program Studi',
-            },
-          },
-        ],
-      },
-      {
-        path: '/class',
-        name: 'class',
-        children: [
-          {
-            path: '',
-            name: 'class.index',
-            component: () => import('@/pages/class/IndexClass.vue'),
-            meta: {
-              roles: ['admin', 'superadmin'],
-              title: 'Kelas',
             },
           },
         ],

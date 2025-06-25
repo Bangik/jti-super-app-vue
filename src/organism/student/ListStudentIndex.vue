@@ -1,6 +1,6 @@
 <script setup lang="ts">
+import { CLASS_LIST } from '@/constants/student'
 import { headers } from '@/constants/tables/student'
-import { useGetClassAsOptions } from '@/hooks/class'
 import { useGetMajorAsOptions } from '@/hooks/major'
 import { useGetSemesterAsOptions } from '@/hooks/semester'
 import { useGetSessionAsOptions } from '@/hooks/session'
@@ -31,13 +31,12 @@ const pageQuery = ref<PageQueryType>({
 const filter = ref<FilterStudent>({
   major_id: undefined,
   study_program_id: undefined,
-  class_id: undefined,
+  class: undefined,
   semester_id: undefined,
 })
 
 const shouldFetchStudyProgram = computed(() => !!filter.value.major_id)
-const shouldFetchClass = computed(() => !!filter.value.study_program_id)
-const shouldFetchSemester = computed(() => !!sessionId.value)
+const shouldFetchSemester = computed(() => !!sessionId.value && !!filter.value.class)
 
 const { data: majorOption, isLoading: isLoadingMajor, isFetching: isFetchingMajor } = useGetMajorAsOptions()
 const {
@@ -47,14 +46,6 @@ const {
 } = useGetStudyProgramAsOptions(
   computed(() => filter.value.major_id || ''),
   shouldFetchStudyProgram,
-)
-const {
-  data: classOptions,
-  isLoading: isLoadingClass,
-  isFetching: isFetchingClass,
-} = useGetClassAsOptions(
-  computed(() => filter.value.study_program_id || ''),
-  shouldFetchClass,
 )
 const { data: sessionOptions, isLoading: isLoadingSession, isFetching: isFetchingSession } = useGetSessionAsOptions()
 const {
@@ -107,7 +98,7 @@ watch(
 watch(
   () => filter.value.study_program_id,
   () => {
-    filter.value.class_id = undefined
+    filter.value.class = undefined
   },
 )
 
@@ -173,12 +164,11 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
       />
       <VAutocomplete
         label="Kelas / Golongan"
-        v-model="filter.class_id"
-        :items="classOptions?.data"
-        item-title="label"
-        item-value="value"
+        v-model="filter.class"
+        :items="CLASS_LIST"
+        item-title="name"
+        item-value="id"
         clearable
-        :loading="isLoadingClass || isFetchingClass"
         :disabled="!filter.study_program_id"
       />
       <VAutocomplete
