@@ -1,40 +1,39 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
-import { LoginSchema } from '@/constants/forms/auth'
-import type { LoginValues } from '@/constants/forms/auth'
+import { ForgotPasswordSchema } from '@/constants/forms/auth'
+import type { ForgotPasswordValues } from '@/constants/forms/auth'
 import { useForm } from 'vee-validate'
 
 import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
 import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
 import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
 import authV1Tree from '@images/pages/auth-v1-tree.png'
-import { useLogin } from '@/services/auth'
-import { useAuthStore } from '@/stores/auth-store'
+import { useForgotPassword } from '@/services/auth'
+import { useToast } from 'vue-toastification'
+import { useRouter, RouterLink } from 'vue-router'
 
 const vuetifyTheme = useTheme()
-const authStore = useAuthStore()
+const toast = useToast()
 const router = useRouter()
 
 const authThemeMask = computed(() => {
   return vuetifyTheme.global.name.value === 'light' ? authV1MaskLight : authV1MaskDark
 })
 
-const isPasswordVisible = ref(false)
-
 const { errors, defineField, handleSubmit, isSubmitting } = useForm({
-  validationSchema: LoginSchema,
+  validationSchema: ForgotPasswordSchema,
 })
 
 const [email] = defineField('email')
-const [password] = defineField('password')
 
 const onSubmit = handleSubmit(async values => {
-  const response = await useLogin(values as LoginValues)
-  if (response.data?.token) {
-    authStore.setUserAccess(response.data)
+  const response = await useForgotPassword(values as ForgotPasswordValues)
+  router.push({ name: 'login' })
+  if (response.message) {
+    toast.success(response.message)
+  } else {
+    toast.error('Failed to send reset password email. Please try again.')
   }
-
-  router.push({ name: 'dashboard.index' })
 })
 </script>
 
@@ -56,8 +55,7 @@ const onSubmit = handleSubmit(async values => {
       </VCardItem>
 
       <VCardText class="pt-2">
-        <h4 class="text-h4 mb-1">Welcome to JTI SUPER APP! 👋🏻</h4>
-        <p class="mb-0">Please sign-in to your account and start the adventure</p>
+        <h4 class="text-h4 mb-1">Forgot password JTI SUPER APP!</h4>
       </VCardText>
 
       <VCardText>
@@ -71,38 +69,25 @@ const onSubmit = handleSubmit(async values => {
                 type="email"
                 :error-messages="errors.email"
               />
-            </VCol>
 
-            <!-- password -->
-            <VCol cols="12">
-              <VTextField
-                v-model="password"
-                label="Password"
-                placeholder="············"
-                :type="isPasswordVisible ? 'text' : 'password'"
-                autocomplete="password"
-                :append-inner-icon="isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'"
-                @click:append-inner="isPasswordVisible = !isPasswordVisible"
-                :error-messages="errors.password"
-              />
-
-              <!-- remember me checkbox -->
-              <div class="d-flex align-center justify-space-between flex-wrap my-6">
-                <a
-                  class="text-primary"
-                  href="/forgot-password"
-                >
-                  Forgot Password?
-                </a>
-              </div>
-
-              <!-- login button -->
               <VBtn
+                class="mt-4"
                 :loading="isSubmitting ? 'white' : false"
                 block
                 type="submit"
-                text="Login"
+                text="Send Reset Password Email"
               />
+
+              <VSpacer />
+
+              <div class="d-flex align-center justify-space-between flex-wrap my-6">
+                <RouterLink
+                  class="text-primary"
+                  to="/login"
+                >
+                  Back to Login
+                </RouterLink>
+              </div>
             </VCol>
           </VRow>
         </VForm>

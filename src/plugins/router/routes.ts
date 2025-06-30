@@ -200,6 +200,28 @@ export const routes = [
         path: 'login',
         name: 'login',
         component: () => import('@/pages/auth/LoginPage.vue'),
+        meta: {
+          public: true,
+          title: 'Login',
+        },
+      },
+      {
+        path: 'forgot-password',
+        name: 'forgot-password',
+        component: () => import('@/pages/auth/ForgotPasswordPage.vue'),
+        meta: {
+          public: true,
+          title: 'Forgot Password',
+        },
+      },
+      {
+        path: 'reset-password',
+        name: 'reset-password',
+        component: () => import('@/pages/auth/ResetPasswordPage.vue'),
+        meta: {
+          public: true,
+          title: 'Reset Password',
+        },
       },
       // {
       //   path: '/:pathMatch(.*)*',

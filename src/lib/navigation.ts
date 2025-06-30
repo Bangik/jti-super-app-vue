@@ -27,6 +27,10 @@ const handleNavigation = (to: RouteLocationNormalized, next: NavigationGuardNext
     }
   }
 
+  if (to.meta.public) {
+    return next()
+  }
+
   if (!token) {
     toast.error('Please login first')
     return next({ name: 'login' })

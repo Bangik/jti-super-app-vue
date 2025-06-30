@@ -1,40 +1,49 @@
 <script setup lang="ts">
 import { useTheme } from 'vuetify'
-import { LoginSchema } from '@/constants/forms/auth'
-import type { LoginValues } from '@/constants/forms/auth'
+import { ResetPasswordSchema } from '@/constants/forms/auth'
+import type { ResetPasswordValues } from '@/constants/forms/auth'
 import { useForm } from 'vee-validate'
 
 import authV1MaskDark from '@images/pages/auth-v1-mask-dark.png'
 import authV1MaskLight from '@images/pages/auth-v1-mask-light.png'
 import authV1Tree2 from '@images/pages/auth-v1-tree-2.png'
 import authV1Tree from '@images/pages/auth-v1-tree.png'
-import { useLogin } from '@/services/auth'
-import { useAuthStore } from '@/stores/auth-store'
+import { useResetPassword } from '@/services/auth'
+import { useToast } from 'vue-toastification'
+import { useRouter, RouterLink } from 'vue-router'
 
 const vuetifyTheme = useTheme()
-const authStore = useAuthStore()
+const toast = useToast()
 const router = useRouter()
+const isPasswordVisible = ref(false)
 
 const authThemeMask = computed(() => {
   return vuetifyTheme.global.name.value === 'light' ? authV1MaskLight : authV1MaskDark
 })
 
-const isPasswordVisible = ref(false)
-
 const { errors, defineField, handleSubmit, isSubmitting } = useForm({
-  validationSchema: LoginSchema,
+  validationSchema: ResetPasswordSchema,
 })
 
 const [email] = defineField('email')
 const [password] = defineField('password')
+const [password_confirmation] = defineField('password_confirmation')
 
 const onSubmit = handleSubmit(async values => {
-  const response = await useLogin(values as LoginValues)
-  if (response.data?.token) {
-    authStore.setUserAccess(response.data)
+  const urlParams = new URLSearchParams(window.location.search)
+  const token = urlParams.get('token')
+  if (!token) {
+    toast.error('Invalid or missing token. Please try again.')
+    return
   }
-
-  router.push({ name: 'dashboard.index' })
+  values.token = token
+  const response = await useResetPassword(values as ResetPasswordValues)
+  router.push({ name: 'login' })
+  if (response.message) {
+    toast.success(response.message)
+  } else {
+    toast.error('Failed to send reset password email. Please try again.')
+  }
 })
 </script>
 
@@ -56,8 +65,7 @@ const onSubmit = handleSubmit(async values => {
       </VCardItem>
 
       <VCardText class="pt-2">
-        <h4 class="text-h4 mb-1">Welcome to JTI SUPER APP! 👋🏻</h4>
-        <p class="mb-0">Please sign-in to your account and start the adventure</p>
+        <h4 class="text-h4 mb-1">Reset password JTI SUPER APP!</h4>
       </VCardText>
 
       <VCardText>
@@ -72,8 +80,6 @@ const onSubmit = handleSubmit(async values => {
                 :error-messages="errors.email"
               />
             </VCol>
-
-            <!-- password -->
             <VCol cols="12">
               <VTextField
                 v-model="password"
@@ -85,24 +91,37 @@ const onSubmit = handleSubmit(async values => {
                 @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 :error-messages="errors.password"
               />
+            </VCol>
+            <VCol cols="12">
+              <VTextField
+                v-model="password_confirmation"
+                label="Confirm Password"
+                placeholder="············"
+                :type="isPasswordVisible ? 'text' : 'password'"
+                autocomplete="password"
+                :append-inner-icon="isPasswordVisible ? 'ri-eye-off-line' : 'ri-eye-line'"
+                @click:append-inner="isPasswordVisible = !isPasswordVisible"
+                :error-messages="errors.password_confirmation"
+              />
 
-              <!-- remember me checkbox -->
-              <div class="d-flex align-center justify-space-between flex-wrap my-6">
-                <a
-                  class="text-primary"
-                  href="/forgot-password"
-                >
-                  Forgot Password?
-                </a>
-              </div>
-
-              <!-- login button -->
               <VBtn
+                class="mt-4"
                 :loading="isSubmitting ? 'white' : false"
                 block
                 type="submit"
-                text="Login"
+                text="Send Reset Password Email"
               />
+
+              <VSpacer />
+
+              <div class="d-flex align-center justify-space-between flex-wrap my-6">
+                <RouterLink
+                  class="text-primary"
+                  to="/login"
+                >
+                  Back to Login
+                </RouterLink>
+              </div>
             </VCol>
           </VRow>
         </VForm>
