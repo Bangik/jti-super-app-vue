@@ -1,13 +1,15 @@
+export type MeResponse = {
+  id: string
+  email: string
+  name: string
+  avatar_url: string
+  roles: string[]
+  permissions: string[]
+}
+
 export type LoginResponse = {
   token: string
-  user: {
-    id: string
-    email: string
-    name: string
-    avatar_url: string
-    roles: string[]
-    permissions: string[]
-  }
+  user: MeResponse
 }
 
 export type LoginStore = LoginResponse & {

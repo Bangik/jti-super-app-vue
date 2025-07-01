@@ -1,7 +1,7 @@
 import type { ForgotPasswordValues, LoginValues, ResetPasswordValues } from '@/constants/forms/auth'
 import axiosInstance from '@/lib/axiosInstance'
 import type { ResponseType } from '@/types'
-import type { LoginResponse } from '@/types/auth'
+import type { LoginResponse, MeResponse } from '@/types/auth'
 
 export const useLogin = async (data: LoginValues): Promise<ResponseType<LoginResponse>> => {
   const response = await axiosInstance.post('/auth/login', data)
@@ -20,5 +20,10 @@ export const useResetPassword = async (data: ResetPasswordValues): Promise<Respo
 
 export const logoutService = async (): Promise<ResponseType<string>> => {
   const response = await axiosInstance.post('/auth/logout')
+  return response.data
+}
+
+export const me = async (): Promise<ResponseType<MeResponse>> => {
+  const response = await axiosInstance.get('/auth/me')
   return response.data
 }
