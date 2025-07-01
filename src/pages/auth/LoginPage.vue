@@ -15,6 +15,12 @@ const vuetifyTheme = useTheme()
 const authStore = useAuthStore()
 const router = useRouter()
 
+const apiUrl = import.meta.env.VITE_API_URL + '/v1'
+
+function loginWithGoogle() {
+  window.location.href = `${apiUrl}/auth/google/login`
+}
+
 const authThemeMask = computed(() => {
   return vuetifyTheme.global.name.value === 'light' ? authV1MaskLight : authV1MaskDark
 })
@@ -106,6 +112,16 @@ const onSubmit = handleSubmit(async values => {
             </VCol>
           </VRow>
         </VForm>
+
+        <VBtn
+          variant="outlined"
+          @click="loginWithGoogle"
+          class="mt-4"
+          block
+          prepend-icon="ri-google-fill"
+        >
+          Login SSO with Google
+        </VBtn>
       </VCardText>
     </VCard>
 

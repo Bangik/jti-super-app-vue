@@ -206,6 +206,15 @@ export const routes = [
         },
       },
       {
+        path: 'auth/callback',
+        name: 'auth.callback',
+        component: () => import('@/pages/auth/AuthCallback.vue'),
+        meta: {
+          public: true,
+          title: 'Login Sukses',
+        },
+      },
+      {
         path: 'forgot-password',
         name: 'forgot-password',
         component: () => import('@/pages/auth/ForgotPasswordPage.vue'),
