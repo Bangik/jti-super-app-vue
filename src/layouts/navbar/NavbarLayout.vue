@@ -18,16 +18,7 @@ defineProps<{
     </IconBtn>
 
     <LinkBack
-      v-if="
-        $route.name !== 'major.index' &&
-        $route.name !== 'study-program.index' &&
-        $route.name !== 'class.index' &&
-        $route.name !== 'session.index' &&
-        $route.name !== 'semester.index' &&
-        $route.name !== 'employee.index' &&
-        $route.name !== 'student.index' &&
-        $route.name !== 'subject.index'
-      "
+      v-if="$route.meta.back !== false"
       class="mr-3"
     />
 

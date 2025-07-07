@@ -195,7 +195,7 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
       <VCardText>
         <VBtn
           color="primary"
-          @click="handleOpenModalAddEdit('add')"
+          @click="$router.push({ name: 'student.create' })"
         >
           Tambah Mahasiswa
         </VBtn>

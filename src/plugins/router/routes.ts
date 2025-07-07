@@ -11,6 +11,7 @@ export const routes = [
         component: () => import('@/pages/home/IndexHome.vue'),
         meta: {
           title: 'Dashboard',
+          back: false,
         },
       },
       {
@@ -24,6 +25,7 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Pegawai',
+              back: false,
             },
           },
           {
@@ -57,6 +59,7 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Jurusan',
+              back: false,
             },
           },
           {
@@ -108,6 +111,7 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Program Studi',
+              back: false,
             },
           },
         ],
@@ -123,6 +127,7 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Tahun Ajaran',
+              back: false,
             },
           },
         ],
@@ -138,6 +143,7 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Semester',
+              back: false,
             },
           },
         ],
@@ -153,6 +159,17 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Mahasiswa',
+              back: false,
+            },
+          },
+          {
+            path: 'create',
+            name: 'student.create',
+            component: () => import('@/pages/student/CreateDetailStudent.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Tambah Mahasiswa',
+              back: true,
             },
           },
         ],
@@ -168,6 +185,7 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Mata Kuliah',
+              back: false,
             },
           },
           {
@@ -177,6 +195,7 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Pengaturan Mata Kuliah',
+              back: false,
             },
           },
           {
@@ -186,6 +205,7 @@ export const routes = [
             meta: {
               roles: ['admin', 'superadmin'],
               title: 'Pengaturan Pengampu Matkul',
+              back: false,
             },
           },
         ],
