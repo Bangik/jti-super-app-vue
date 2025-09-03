@@ -1,17 +1,18 @@
 <script lang="ts" setup>
+import { StudentSchema } from '@/constants/forms/student'
+import { GENDER_OPTIONS, RELIGION_OPTIONS } from '@/constants/user'
+import { useAddStudent } from '@/hooks/student'
 import { useGetMajorAsOptions } from '@/hooks/major'
-import { useGetStudyProgramAsOptions } from '@/hooks/study-program'
-import avatar1 from '@images/avatars/avatar-1.png'
-// import { CLASS_LIST } from '@/constants/student'
-// import { useGetSessionAsOptions } from '@/hooks/session'
-// import { useGetSemesterAsOptions } from '@/hooks/semester'
 import type { StudentDetail } from '@/types/student'
-import { useUpdateStudent } from '@/hooks/student'
-import { StudentUpdateSchema } from '@/constants/forms/student'
-import { VDateInput } from 'vuetify/labs/components'
+import type { Gender, Religion } from '@/types/user'
+import avatar1 from '@images/avatars/avatar-1.png'
 import { useForm } from 'vee-validate'
-import type { Gender, Religion, Status } from '@/types/user'
-import { GENDER_OPTIONS, RELIGION_OPTIONS, STATUS_OPTIONS } from '@/constants/user'
+import { useRouter } from 'vue-router'
+import { VDateInput } from 'vuetify/labs/components'
+import { CLASS_LIST } from '@/constants/student'
+import { useGetStudyProgramAsOptions } from '@/hooks/study-program'
+import { useGetSessionAsOptions } from '@/hooks/session'
+import { useGetSemesterAsOptions } from '@/hooks/semester'
 
 interface Props {
   data?: StudentDetail
@@ -26,16 +27,17 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const router = useRouter()
-const avatarPreview = ref<string | null>(null)
 const refInputEl = ref<HTMLElement>()
+const avatarPreview = ref<string | null>(null)
 const selectedMajor = ref<string | null>(null)
-// const selectedSession = ref<string | null>(null)
+const selectedStudyProgram = ref<string | null>(null)
+const selectedSession = ref<string | null>(null)
 
 const shouldFetchStudyProgram = computed(() => !!selectedMajor.value)
-// const shouldFetchSemester = computed(() => !!selectedSession.value)
+const shouldFetchSemester = computed(() => !!selectedSession.value)
 
 const { data: dataListMajor, isLoading: isLoadingListMajor, isFetching: isFetchingListMajor } = useGetMajorAsOptions()
-// const { data: sessionOptions, isLoading: isLoadingSession, isFetching: isFetchingSession } = useGetSessionAsOptions()
+const { data: sessionOptions, isLoading: isLoadingSession, isFetching: isFetchingSession } = useGetSessionAsOptions()
 
 const {
   data: studyProgramOptions,
@@ -46,20 +48,21 @@ const {
   shouldFetchStudyProgram,
 )
 
-// const {
-//   data: semesterOptions,
-//   isLoading: isLoadingSemester,
-//   isFetching: isFetchingSemester,
-// } = useGetSemesterAsOptions(
-//   computed(() => selectedSession.value || ''),
-//   shouldFetchSemester,
-// )
+const {
+  data: semesterOptions,
+  isLoading: isLoadingSemester,
+  isFetching: isFetchingSemester,
+} = useGetSemesterAsOptions(
+  computed(() => selectedSession.value || ''),
+  shouldFetchSemester,
+)
 
-const { mutateAsync, isSuccess, isPending } = useUpdateStudent(computed(() => props.data?.id ?? ''))
+const { mutateAsync, isSuccess, isPending } = useAddStudent()
 
 const { errors, defineField, handleSubmit, resetForm } = useForm({
-  validationSchema: StudentUpdateSchema,
+  validationSchema: StudentSchema,
   initialValues: {
+    semester_id: '',
     study_program_id: '',
     m_user_id: undefined as string | undefined,
     name: '',
@@ -75,11 +78,12 @@ const { errors, defineField, handleSubmit, resetForm } = useForm({
     address: '',
     phone_number: '',
     nationality: '',
-    status: '' as Status,
+    class: '',
     avatar: null as File | null,
   },
 })
 
+const [semester_id] = defineField('semester_id')
 const [study_program_id] = defineField('study_program_id')
 const [nim] = defineField('nim')
 const [email] = defineField('email')
@@ -93,8 +97,8 @@ const [tuition_fee] = defineField('tuition_fee')
 const [tuition_method] = defineField('tuition_method')
 const [address] = defineField('address')
 const [nationality] = defineField('nationality')
-const [status] = defineField('status')
 const [phone_number] = defineField('phone_number')
+const [classField] = defineField('class')
 const [avatar] = defineField('avatar')
 
 const onSubmit = handleSubmit(async values => {
@@ -129,28 +133,27 @@ const resetAvatar = () => {
 const resetFormOnUpdate = () => {
   resetForm({
     values: {
-      study_program_id: props.data?.study_program_id || '',
-      m_user_id: props.data?.user?.id || '',
-      name: props.data?.user?.name || '',
-      email: props.data?.user?.email || '',
-      nim: props.data?.nim || '',
-      generation: props.data?.generation || '',
-      gender: props.data?.user?.gender || undefined,
-      religion: props.data?.user?.religion || undefined,
-      birth_place: props.data?.user?.birth_place || '',
+      semester_id: undefined,
+      study_program_id: undefined,
+      m_user_id: undefined,
+      name: '',
+      email: '',
+      nim: '',
+      generation: '',
+      gender: undefined,
+      religion: undefined,
+      birth_place: '',
       birth_date: null,
-      tuition_fee: props.data?.tuition_fee || '',
-      tuition_method: props.data?.tuition_method || '',
-      address: props.data?.user?.address || '',
-      nationality: props.data?.user?.nationality || '',
-      phone_number: props.data?.user?.phone_number || '',
-      status: props.data?.user?.status || undefined,
+      tuition_fee: '',
+      tuition_method: '',
+      address: '',
+      nationality: '',
+      phone_number: '',
+      class: '',
       avatar: null,
     },
   })
   resetAvatar()
-
-  selectedMajor.value = props.data?.major_id || null
 }
 
 watch(
@@ -160,8 +163,14 @@ watch(
   },
   { immediate: true, deep: true },
 )
-</script>
 
+watch(
+  () => selectedMajor.value,
+  () => {
+    selectedStudyProgram.value = null
+  },
+)
+</script>
 <template>
   <VRow>
     <VCol>
@@ -209,6 +218,16 @@ watch(
                 />
               </VBtn>
             </div>
+            <p class="text-body-1 mb-0">
+              Format yang diizinkan: JPG, GIF, atau PNG. Ukuran maksimum 2MB
+              <VAlert
+                v-if="errors.avatar"
+                type="error"
+                variant="tonal"
+              >
+                {{ errors.avatar }}
+              </VAlert>
+            </p>
           </div>
         </VCardText>
 
@@ -217,13 +236,13 @@ watch(
           <VForm class="mt-6">
             <VRow>
               <VCol
-                md="6"
+                md="4"
                 cols="12"
               >
                 <VAutocomplete
                   v-model="selectedMajor"
                   :items="dataListMajor?.data"
-                  :loading="isLoadingListMajor || isFetchingListMajor"
+                  :loading="isLoadingListMajor || isFetchingListMajor || isLoading || isFetching"
                   item-title="label"
                   item-value="value"
                   label="Jurusan"
@@ -233,7 +252,7 @@ watch(
               </VCol>
 
               <VCol
-                md="6"
+                md="4"
                 cols="12"
               >
                 <VAutocomplete
@@ -242,28 +261,29 @@ watch(
                   item-title="label"
                   item-value="value"
                   clearable
+                  v-model="study_program_id"
                   placeholder="Pilih program studi"
                   :loading="isLoadingStudyProgram || isFetchingStudyProgram"
                   :disabled="!selectedMajor"
-                  v-model="study_program_id"
-                  :error-messages="errors.study_program_id"
                 />
               </VCol>
 
-              <!-- <VCol
+              <VCol
                 md="4"
                 cols="12"
               >
                 <VAutocomplete
                   label="Kelas / Golongan"
+                  v-model="classField"
                   :items="CLASS_LIST"
                   item-title="name"
                   item-value="id"
                   clearable
+                  :disabled="!study_program_id"
                 />
-              </VCol> -->
+              </VCol>
 
-              <!-- <VCol
+              <VCol
                 md="6"
                 cols="12"
               >
@@ -284,6 +304,7 @@ watch(
               >
                 <VAutocomplete
                   label="Semester"
+                  v-model="semester_id"
                   :items="semesterOptions?.data"
                   :item-title="item => `${item.semester} tahun ${item.year}`"
                   item-value="id"
@@ -291,23 +312,20 @@ watch(
                   :loading="isLoadingSemester || isFetchingSemester"
                   :disabled="!selectedSession"
                 />
-              </VCol> -->
+              </VCol>
 
               <VCol
                 md="6"
                 cols="12"
               >
                 <VTextField
+                  v-model="nim"
                   placeholder="Masukkan NIM"
                   label="NIM"
-                  v-model="nim"
                   :error-messages="errors.nim"
-                  :loading="isPending"
-                  :disabled="isPending || isLoading || isFetching"
-                  required
+                  :loading="isLoading || isFetching"
                 />
               </VCol>
-
               <VCol
                 md="6"
                 cols="12"
@@ -470,22 +488,6 @@ watch(
               </VCol>
 
               <VCol
-                md="6"
-                cols="12"
-              >
-                <VSelect
-                  v-model="status"
-                  :items="STATUS_OPTIONS"
-                  item-title="label"
-                  item-value="value"
-                  placeholder="Pilih status"
-                  label="Status"
-                  :error-messages="errors.status"
-                  :loading="isLoading || isFetching"
-                />
-              </VCol>
-
-              <VCol
                 cols="12"
                 class="d-flex flex-wrap gap-4"
               >
@@ -510,38 +512,6 @@ watch(
               </VCol>
             </VRow>
           </VForm>
-        </VCardText>
-      </VCard>
-
-      <VCard class="mt-6">
-        <VCardText>
-          <VBtn
-            color="primary"
-            class="mb-4"
-            >Tambah Semester Tempuh</VBtn
-          >
-
-          <VTable>
-            <thead>
-              <tr>
-                <th>Semester</th>
-                <th>Kelas / Golongan</th>
-                <th>Tahun</th>
-                <th>Tahun Ajaran</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="semester in props.data?.semesters || []"
-                :key="semester.id"
-              >
-                <td>{{ semester.semester }}</td>
-                <td>{{ semester.class }}</td>
-                <td>{{ semester.year }}</td>
-                <td>{{ semester.session }}</td>
-              </tr>
-            </tbody>
-          </VTable>
         </VCardText>
       </VCard>
     </VCol>

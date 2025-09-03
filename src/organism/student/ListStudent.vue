@@ -125,7 +125,7 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
       <template #item.no="{ index }">{{ index + 1 }}</template>
       <template #item.action="{ item }">
         <IconBtn
-          @click="handleOpenModalAddEdit('edit', item)"
+          @click="$router.push({ name: 'student.detail', params: { studentId: item.id } })"
           class="mr-2"
           icon="ri-pencil-line"
           color="primary"

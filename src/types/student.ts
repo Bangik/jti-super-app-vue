@@ -1,4 +1,4 @@
-import type { Gender, Religion } from './user'
+import type { Gender, Religion, Status } from './user'
 
 export type StudentList = {
   id: string
@@ -34,11 +34,13 @@ export type StudentDetail = {
   class: string
   tuition_fee: string
   tuition_method: string
+  major_id: string | null
+  study_program_id: string | null
   user: {
     id: string
     name: string
     email: string
-    status: string
+    status: Status | undefined
     gender: Gender | undefined
     religion: Religion | undefined
     birth_date: string | undefined
@@ -56,6 +58,13 @@ export type StudentDetail = {
     id: string | undefined
     name: string | null
   }
+  semesters: {
+    id: string
+    semester: string
+    class: string
+    year: string
+    session: string
+  }[]
   study_program: {
     id: string | undefined
     name: string | null

@@ -1,4 +1,4 @@
-import type { StudentValues } from '@/constants/forms/student'
+import type { StudentUpdateValues, StudentValues } from '@/constants/forms/student'
 import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
 import type { StudentDetail, StudentList } from '@/types/student'
@@ -19,7 +19,7 @@ export const addStudent = async (data: StudentValues): Promise<ResponseType> => 
   return response.data
 }
 
-export const updateStudent = async (id: string, data: StudentValues): Promise<ResponseType> => {
+export const updateStudent = async (id: string, data: StudentUpdateValues): Promise<ResponseType> => {
   const response = await axiosInstance.put(`/students/${id}`, data, {
     headers: {
       'Content-Type': 'multipart/form-data',

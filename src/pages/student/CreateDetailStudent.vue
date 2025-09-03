@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useGetStudentById } from '@/hooks/student'
+import CreateStudent from '@/organism/student/CreateStudent.vue'
 import DetailStudent from '@/organism/student/DetailStudent.vue'
 import { useRoute } from 'vue-router'
 
@@ -10,12 +11,18 @@ const { data, isLoading, isFetching } =
   route.name === 'student.detail' ? useGetStudentById(studentId) : { data: null, isLoading: false, isFetching: false }
 </script>
 <template>
-  <DetailStudent
+  <!-- <DetailStudent
     v-if="route.name === 'student.detail'"
     type="edit"
     :data="data?.data"
     :isLoading="isLoading"
     :isFetching="isFetching"
+  /> -->
+  <CreateStudent v-if="route.name === 'student.create'" />
+  <DetailStudent
+    v-if="route.name === 'student.detail'"
+    :data="data?.data"
+    :isLoading="isLoading"
+    :isFetching="isFetching"
   />
-  <DetailStudent v-else-if="route.name === 'student.create'" />
 </template>

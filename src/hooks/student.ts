@@ -3,7 +3,7 @@ import type { ResponseType, PageQueryType } from '@/types'
 import type { StudentDetail, StudentList } from '@/types/student'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
-import type { StudentValues } from '@/constants/forms/student'
+import type { StudentUpdateValues } from '@/constants/forms/student'
 
 export const useGetStudent = (pageQuery: Ref<PageQueryType>) => {
   return useQuery<ResponseType<StudentList[]>, Error>({
@@ -29,8 +29,8 @@ export const useAddStudent = () => {
 export const useUpdateStudent = (id: Ref<string>) => {
   const { queryClient, toast } = useMutationResources()
   return useMutation({
-    mutationFn: (data: StudentValues) => updateStudent(id.value, data),
-    onMutate: async (updatedData: StudentValues) => {
+    mutationFn: (data: StudentUpdateValues) => updateStudent(id.value, data),
+    onMutate: async (updatedData: StudentUpdateValues) => {
       await queryClient.cancelQueries({ queryKey: ['students', id] })
       return updatedData
     },

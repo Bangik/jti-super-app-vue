@@ -12,3 +12,8 @@ export const RELIGION_OPTIONS = [
   { label: 'Konghucu', value: 'CONFUCIANISM' },
   { label: 'Lainnya', value: 'OTHER' },
 ]
+
+export const STATUS_OPTIONS = [
+  { label: 'Aktif', value: 'ACTIVE' },
+  { label: 'Tidak Aktif', value: 'INACTIVE' },
+]

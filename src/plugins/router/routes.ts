@@ -172,6 +172,16 @@ export const routes = [
               back: true,
             },
           },
+          {
+            path: ':studentId',
+            name: 'student.detail',
+            component: () => import('@/pages/student/CreateDetailStudent.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Detail Mahasiswa',
+              back: true,
+            },
+          },
         ],
       },
       {

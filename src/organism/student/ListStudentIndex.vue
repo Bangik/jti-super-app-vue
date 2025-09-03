@@ -130,11 +130,11 @@ const handleOpenModalDelete = (item: StudentList) => {
   selected.open = true
 }
 
-const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
-  selected.type = type
-  selected.selectedStudent = data ? { ...data } : ({} as StudentList)
-  selected.dialog = true
-}
+// const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
+//   selected.type = type
+//   selected.selectedStudent = data ? { ...data } : ({} as StudentList)
+//   selected.dialog = true
+// }
 </script>
 
 <template>
@@ -251,7 +251,7 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
 
       <template #item.action="{ item }">
         <IconBtn
-          @click="handleOpenModalAddEdit('edit', item)"
+          @click="$router.push({ name: 'student.detail', params: { studentId: item.id } })"
           class="mr-2"
           icon="ri-pencil-line"
           color="primary"
