@@ -3,7 +3,7 @@
 import { useAuthStore } from '@/stores/auth-store'
 import VerticalNavGroup from './fragments//VerticalNavGroup.vue'
 import VerticalNavLink from './fragments/VerticalNavLink.vue'
-import { sidebarMaster, sidebarAcademic } from '@/constants/index.ts'
+import { sidebarMaster, sidebarAcademic, sidebarAPI } from '@/constants/index.ts'
 
 const authStore = useAuthStore()
 </script>
@@ -52,6 +52,24 @@ const authStore = useAuthStore()
   >
     <VerticalNavLink
       v-for="item in sidebarAcademic"
+      :key="item.id"
+      :item="{
+        title: item.title,
+        to: item.to,
+      }"
+      :hidden="!item.roles?.some(role => authStore.user.roles.includes(role))"
+    />
+  </VerticalNavGroup>
+
+  <!-- Data API -->
+  <VerticalNavGroup
+    :item="{
+      title: 'Data API',
+      icon: 'ri-database-line',
+    }"
+  >
+    <VerticalNavLink
+      v-for="item in sidebarAPI"
       :key="item.id"
       :item="{
         title: item.title,

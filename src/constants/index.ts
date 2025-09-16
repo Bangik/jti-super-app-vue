@@ -95,4 +95,18 @@ const sidebarAcademic = computed(() => {
     },
   ]
 })
-export { sidebarMaster, sidebarAcademic }
+
+const sidebarAPI = computed(() => {
+  return [
+    {
+      id: 1,
+      title: 'Data Oauth Client',
+      disable: false,
+      hidden: false,
+      to: '/oauth-client',
+      roles: ['superadmin', 'admin'] as string[],
+    },
+  ]
+})
+
+export { sidebarMaster, sidebarAcademic, sidebarAPI }

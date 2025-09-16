@@ -246,6 +246,22 @@ export const routes = [
           },
         ],
       },
+      {
+        path: '/oauth-client',
+        name: 'oauth-client',
+        children: [
+          {
+            path: '',
+            name: 'oauth-client.index',
+            component: () => import('@/pages/oauth/IndexOauth.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'List Oauth Client',
+              back: false,
+            },
+          },
+        ],
+      },
     ],
   },
   {
