@@ -33,6 +33,14 @@ const sidebarMaster = computed(() => {
       roles: ['superadmin', 'admin'] as string[],
     },
     {
+      id: 4,
+      title: 'Data Laboratorium',
+      disable: false,
+      hidden: false,
+      to: '/laboratory',
+      roles: ['superadmin', 'admin'] as string[],
+    },
+    {
       id: 5,
       title: 'Data Mahasiswa',
       disable: false,

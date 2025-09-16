@@ -117,6 +117,32 @@ export const routes = [
         ],
       },
       {
+        path: '/laboratory',
+        name: 'laboratory',
+        children: [
+          {
+            path: '',
+            name: 'laboratory.index',
+            component: () => import('@/pages/lab/IndexLaboratory.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Laboratorium',
+              back: false,
+            },
+          },
+          {
+            path: 'create',
+            name: 'laboratory.create',
+            component: () => import('@/pages/lab/IndexCreate.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Tambah Laboratorium',
+              back: true,
+            },
+          },
+        ],
+      },
+      {
         path: '/session',
         name: 'session',
         children: [
