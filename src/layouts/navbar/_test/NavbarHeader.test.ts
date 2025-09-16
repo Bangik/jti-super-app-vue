@@ -42,7 +42,7 @@ describe('NavbarHeader', () => {
     const title = wrapper.find('h1')
 
     expect(title.exists()).toBe(true)
-    expect(title.text()).toBe('Materio')
+    expect(title.text()).toBe('JTI SUPER APP')
   })
 
   it('renders RouterLink pointing to home route', () => {
