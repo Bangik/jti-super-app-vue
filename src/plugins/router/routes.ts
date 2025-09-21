@@ -47,6 +47,22 @@ export const routes = [
         ],
       },
       {
+        path: '/permission',
+        name: 'permission',
+        children: [
+          {
+            path: '',
+            name: 'permission.index',
+            component: () => import('@/pages/permission/IndexPermission.vue'),
+            meta: {
+              permissions: ['admin', 'superadmin'],
+              title: 'Permission',
+              back: false,
+            },
+          },
+        ],
+      },
+      {
         path: '/employee',
         name: 'employee',
         children: [
