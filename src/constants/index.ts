@@ -129,11 +129,21 @@ const sidebarAPI = computed(() => {
   return [
     {
       id: 1,
-      title: 'Data Oauth Client',
+      title: 'Oauth Client',
       disable: false,
       hidden: false,
       to: '/oauth-client',
       roles: ['superadmin', 'admin'] as string[],
+    },
+    {
+      id: 2,
+      title: 'Dokumentasi API',
+      disable: false,
+      hidden: false,
+      to: null,
+      href: 'https://vw4ns0iwjp.apidog.io',
+      roles: ['superadmin', 'admin'] as string[],
+      target: '_blank',
     },
   ]
 })

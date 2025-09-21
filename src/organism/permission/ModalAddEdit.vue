@@ -82,7 +82,7 @@ watch(
   >
     <VCard>
       <VCardTitle>
-        <p>{{ isAddMode ? 'Tambah' : 'Edit' }} Oauth Client</p>
+        <p>{{ isAddMode ? 'Tambah' : 'Edit' }} Oauth Permission</p>
       </VCardTitle>
       <VCardText>
         <VForm>
@@ -90,7 +90,7 @@ watch(
             <VCol cols="12">
               <VTextField
                 required
-                label="Nama Client"
+                label="Nama Permission"
                 v-model="name"
                 :error-messages="errors.name"
               />

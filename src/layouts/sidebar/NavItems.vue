@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import VerticalNavGroup from './fragments//VerticalNavGroup.vue'
 import VerticalNavLink from './fragments/VerticalNavLink.vue'
 import { sidebarMaster, sidebarAcademic, sidebarAPI, sidebarAccount } from '@/constants/index.ts'
+import type { ATagTargetAttrValues } from '@/types/navbar'
 
 const authStore = useAuthStore()
 </script>
@@ -93,6 +94,8 @@ const authStore = useAuthStore()
       :item="{
         title: item.title,
         to: item.to,
+        href: item.href,
+        target: item.target as ATagTargetAttrValues,
       }"
       :hidden="!item.roles?.some(role => authStore.user.roles.includes(role))"
     />
