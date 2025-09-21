@@ -3,7 +3,7 @@
 import { useAuthStore } from '@/stores/auth-store'
 import VerticalNavGroup from './fragments//VerticalNavGroup.vue'
 import VerticalNavLink from './fragments/VerticalNavLink.vue'
-import { sidebarMaster, sidebarAcademic, sidebarAPI } from '@/constants/index.ts'
+import { sidebarMaster, sidebarAcademic, sidebarAPI, sidebarAccount } from '@/constants/index.ts'
 
 const authStore = useAuthStore()
 </script>
@@ -25,6 +25,25 @@ const authStore = useAuthStore()
       }"
     />
   </VerticalNavGroup>
+
+  <!-- Account Data -->
+  <VerticalNavGroup
+    :item="{
+      title: 'Data Akun',
+      icon: 'ri-user-3-line',
+    }"
+  >
+    <VerticalNavLink
+      v-for="item in sidebarAccount"
+      :key="item.id"
+      :item="{
+        title: item.title,
+        to: item.to,
+      }"
+      :hidden="!item.roles?.some(role => authStore.user.roles.includes(role))"
+    />
+  </VerticalNavGroup>
+
   <!-- Master Data -->
   <VerticalNavGroup
     :item="{

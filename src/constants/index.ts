@@ -1,3 +1,32 @@
+const sidebarAccount = computed(() => {
+  return [
+    {
+      id: 1,
+      title: 'User',
+      disable: false,
+      hidden: false,
+      to: '/user',
+      roles: ['superadmin', 'admin'] as string[],
+    },
+    {
+      id: 2,
+      title: 'Role',
+      disable: false,
+      hidden: false,
+      to: '/role',
+      roles: ['superadmin', 'admin'] as string[],
+    },
+    {
+      id: 3,
+      title: 'Permission',
+      disable: false,
+      hidden: false,
+      to: '/permission',
+      roles: ['superadmin', 'admin'] as string[],
+    },
+  ]
+})
+
 const sidebarMaster = computed(() => {
   return [
     {
@@ -109,4 +138,4 @@ const sidebarAPI = computed(() => {
   ]
 })
 
-export { sidebarMaster, sidebarAcademic, sidebarAPI }
+export { sidebarMaster, sidebarAcademic, sidebarAPI, sidebarAccount }

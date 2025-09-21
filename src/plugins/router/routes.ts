@@ -15,6 +15,38 @@ export const routes = [
         },
       },
       {
+        path: '/account',
+        name: 'account',
+        children: [
+          {
+            path: '',
+            name: 'account.index',
+            component: () => import('@/pages/account/IndexAccount.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Akun',
+              back: false,
+            },
+          },
+        ],
+      },
+      {
+        path: '/role',
+        name: 'role',
+        children: [
+          {
+            path: '',
+            name: 'role.index',
+            component: () => import('@/pages/role/IndexRole.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Role',
+              back: false,
+            },
+          },
+        ],
+      },
+      {
         path: '/employee',
         name: 'employee',
         children: [
