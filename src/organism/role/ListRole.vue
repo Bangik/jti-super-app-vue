@@ -26,6 +26,22 @@ const selected = reactive({
 const { data, isLoading, isFetching, error } = useGetRoles(pageQuery)
 const { mutateAsync, isPending, isSuccess } = useDeleteRoles()
 
+watch(
+  () => data.value,
+  () => {
+    if (data.value?.meta?.last_page) {
+      last_page.value = data.value?.meta?.last_page
+    }
+
+    if (data.value?.meta?.total) {
+      total.value = data.value?.meta?.total
+    }
+  },
+  {
+    immediate: true,
+  },
+)
+
 watchDebounced(
   search,
   () => {

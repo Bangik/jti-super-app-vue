@@ -16,6 +16,22 @@ const pageQuery = ref<PageQueryType>({
 
 const { data, isLoading, isFetching, error } = useGetLab(pageQuery)
 
+watch(
+  () => data.value,
+  () => {
+    if (data.value?.meta?.last_page) {
+      last_page.value = data.value?.meta?.last_page
+    }
+
+    if (data.value?.meta?.total) {
+      total.value = data.value?.meta?.total
+    }
+  },
+  {
+    immediate: true,
+  },
+)
+
 watchDebounced(
   search,
   () => {
