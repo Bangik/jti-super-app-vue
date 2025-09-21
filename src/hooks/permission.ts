@@ -1,4 +1,10 @@
-import { addPermissions, deletePermissions, getPermissions, updatePermissions } from '@/services/permission'
+import {
+  addPermissions,
+  deletePermissions,
+  getPermissions,
+  getPermissionsAsOptions,
+  updatePermissions,
+} from '@/services/permission'
 import type { PageQueryType, ResponseType } from '@/types'
 import type { Permission } from '@/types/permission'
 import { useMutation, useQuery } from '@tanstack/vue-query'
@@ -23,6 +29,13 @@ export const useAddPermissions = () => {
     onError: error => {
       toast.error(error.message)
     },
+  })
+}
+
+export const useGetPermissionsAsOptions = () => {
+  return useQuery<ResponseType<{ value: string; label: string }[]>, Error>({
+    queryKey: ['permissions', 'options'],
+    queryFn: () => getPermissionsAsOptions(),
   })
 }
 

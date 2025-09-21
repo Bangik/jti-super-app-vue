@@ -133,6 +133,27 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: Role) => {
       @update:sort-by="handleSort"
     >
       <template #item.no="{ index }">{{ index + 1 }}</template>
+      <template #item.permissions="{ item }">
+        <VRow
+          class="flex-wrap gap-1 mt-2 mb-2"
+          dense
+        >
+          <VCol
+            v-for="permission in item.permissions"
+            :key="permission.id"
+            cols="auto"
+            class="pa-0"
+          >
+            <VChip
+              color="primary"
+              variant="tonal"
+              size="small"
+            >
+              {{ permission.name }}
+            </VChip>
+          </VCol>
+        </VRow>
+      </template>
       <template #item.action="{ item }">
         <IconBtn
           @click="handleOpenModalAddEdit('edit', item)"

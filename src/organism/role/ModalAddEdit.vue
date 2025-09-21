@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { RoleSchema } from '@/constants/forms/role'
+import { useGetPermissionsAsOptions } from '@/hooks/permission'
 import { useAddRoles, useUpdateRoles } from '@/hooks/role'
 import type { Role } from '@/types/role'
 import { useForm } from 'vee-validate'
@@ -24,14 +25,22 @@ const mutateAsync = computed(() => (isAddMode.value ? createMutation.mutateAsync
 const isSuccess = computed(() => (isAddMode.value ? createMutation.isSuccess : updateMutation.isSuccess))
 const isPending = computed(() => (isAddMode.value ? createMutation.isPending : updateMutation.isPending))
 
+const {
+  data: permissionsOptions,
+  isLoading: isLoadingPermissions,
+  isFetching: isFetchingPermissions,
+} = useGetPermissionsAsOptions()
+
 const { errors, defineField, handleSubmit, resetForm, setFieldValue } = useForm({
   validationSchema: RoleSchema,
   initialValues: {
     name: '',
+    permissions: [] as string[],
   },
 })
 
 const [name] = defineField('name')
+const [permissions] = defineField('permissions')
 
 setFieldValue('name', props.data?.name as string)
 
@@ -55,12 +64,14 @@ const resetFormOnUpdate = () => {
     resetForm({
       values: {
         name: props.data?.name,
+        permissions: props.data?.permissions.map(p => p.id) ?? [],
       },
     })
   } else {
     resetForm({
       values: {
         name: '',
+        permissions: [],
       },
     })
   }
@@ -82,7 +93,7 @@ watch(
   >
     <VCard>
       <VCardTitle>
-        <p>{{ isAddMode ? 'Tambah' : 'Edit' }} Oauth Client</p>
+        <p>{{ isAddMode ? 'Tambah' : 'Edit' }} Role</p>
       </VCardTitle>
       <VCardText>
         <VForm>
@@ -90,9 +101,23 @@ watch(
             <VCol cols="12">
               <VTextField
                 required
-                label="Nama Client"
+                label="Nama Role"
                 v-model="name"
                 :error-messages="errors.name"
+              />
+            </VCol>
+            <VCol cols="12">
+              <VAutocomplete
+                chips
+                clearable
+                multiple
+                label="Permissions"
+                v-model="permissions"
+                :items="permissionsOptions?.data"
+                item-title="label"
+                item-value="value"
+                :loading="isLoadingPermissions || isFetchingPermissions"
+                :error-messages="errors.permissions"
               />
             </VCol>
           </VRow>

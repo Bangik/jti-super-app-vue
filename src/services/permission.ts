@@ -1,12 +1,17 @@
 import type { PermissionValues } from '@/constants/forms/permission'
 import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { Permission } from '@/types/permission'
+import type { Permission, PermissionOption } from '@/types/permission'
 
 export async function getPermissions(pageQuery: PageQueryType): Promise<ResponseType<Permission[]>> {
   const response = await axiosInstance.get(`/permissions`, {
     params: { ...pageQuery },
   })
+  return response.data
+}
+
+export const getPermissionsAsOptions = async (): Promise<ResponseType<PermissionOption[]>> => {
+  const response = await axiosInstance.get(`/permissions/options`)
   return response.data
 }
 
