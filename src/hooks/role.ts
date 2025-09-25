@@ -1,6 +1,6 @@
-import { addRoles, deleteRoles, getRoles, updateRoles } from '@/services/role'
+import { addRoles, deleteRoles, getRoles, getRolesAsOptions, updateRoles } from '@/services/role'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { Role } from '@/types/role'
+import type { Role, RoleOption } from '@/types/role'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { RoleValues } from '@/constants/forms/role'
@@ -9,6 +9,13 @@ export const useGetRoles = (pageQuery: Ref<PageQueryType>) => {
   return useQuery<ResponseType<Role[]>, Error>({
     queryKey: ['roles', pageQuery],
     queryFn: () => getRoles(pageQuery.value),
+  })
+}
+
+export const useGetRolesAsOptions = () => {
+  return useQuery<ResponseType<RoleOption[]>, Error>({
+    queryKey: ['roles', 'options'],
+    queryFn: () => getRolesAsOptions(),
   })
 }
 

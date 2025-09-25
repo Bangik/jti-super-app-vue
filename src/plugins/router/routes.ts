@@ -31,6 +31,22 @@ export const routes = [
         ],
       },
       {
+        path: '/user',
+        name: 'user',
+        children: [
+          {
+            path: '',
+            name: 'user.index',
+            component: () => import('@/pages/user/IndexUser.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'User',
+              back: false,
+            },
+          },
+        ],
+      },
+      {
         path: '/role',
         name: 'role',
         children: [

@@ -1,12 +1,17 @@
 import type { RoleValues } from '@/constants/forms/role'
 import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { Role } from '@/types/role'
+import type { Role, RoleOption } from '@/types/role'
 
 export async function getRoles(pageQuery: PageQueryType): Promise<ResponseType<Role[]>> {
   const response = await axiosInstance.get(`/roles`, {
     params: { ...pageQuery },
   })
+  return response.data
+}
+
+export const getRolesAsOptions = async (): Promise<ResponseType<RoleOption[]>> => {
+  const response = await axiosInstance.get(`/roles/options`)
   return response.data
 }
 
