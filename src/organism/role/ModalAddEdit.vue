@@ -64,7 +64,7 @@ const resetFormOnUpdate = () => {
     resetForm({
       values: {
         name: props.data?.name,
-        permissions: props.data?.permissions.map(p => p.id) ?? [],
+        permissions: props.data?.permissions?.map(p => p.id) ?? [],
       },
     })
   } else {
