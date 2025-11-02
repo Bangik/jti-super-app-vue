@@ -35,8 +35,8 @@ export const useAddSession = () => {
 export const useUpdateSession = (id: Ref<string>) => {
   const { queryClient, toast } = useMutationResources()
   return useMutation({
-    mutationFn: (data: { session: string }) => updateSession(id.value, data),
-    onMutate: async (updatedData: { session: string }) => {
+    mutationFn: (data: { session: string; is_active: boolean }) => updateSession(id.value, data),
+    onMutate: async (updatedData: { session: string; is_active: boolean }) => {
       await queryClient.cancelQueries({ queryKey: ['sessions', id] })
       return updatedData
     },

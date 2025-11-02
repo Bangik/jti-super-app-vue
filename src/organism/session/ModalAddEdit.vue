@@ -28,12 +28,15 @@ const { errors, defineField, handleSubmit, resetForm, setFieldValue } = useForm(
   validationSchema: SessionSchema,
   initialValues: {
     session: '',
+    is_active: false,
   },
 })
 
 const [session] = defineField('session')
+const [is_active] = defineField('is_active')
 
 setFieldValue('session', props.data?.session as string)
+setFieldValue('is_active', props.data?.is_active as boolean)
 
 const onSubmit = handleSubmit(async values => {
   if (!mutateAsync.value) return
@@ -55,12 +58,14 @@ const resetFormOnUpdate = () => {
     resetForm({
       values: {
         session: props.data?.session,
+        is_active: props.data?.is_active,
       },
     })
   } else {
     resetForm({
       values: {
         session: '',
+        is_active: false,
       },
     })
   }
@@ -93,6 +98,15 @@ watch(
                 label="Tahun Ajaran"
                 v-model="session"
                 :error-messages="errors.session"
+              />
+            </VCol>
+          </VRow>
+          <VRow dense>
+            <VCol cols="12">
+              <VSwitch
+                v-model="is_active"
+                label="Status"
+                :error-messages="errors.is_active"
               />
             </VCol>
           </VRow>

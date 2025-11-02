@@ -57,7 +57,7 @@ const handleSort = (sort: Array<SortItem>) => {
     return
   }
 
-  if (sort[0].key === 'no' || sort[0].key === 'action') {
+  if (sort[0].key === 'no' || sort[0].key === 'action' || sort[0].key === 'is_active') {
     return
   }
 
@@ -133,6 +133,16 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: SessionList) => {
       @update:sort-by="handleSort"
     >
       <template #item.no="{ index }">{{ index + 1 }}</template>
+
+      <!-- status using chip -->
+      <template #item.is_active="{ item }">
+        <VChip
+          :color="item.is_active ? 'success' : 'error'"
+          small
+        >
+          {{ item.is_active ? 'Aktif' : 'Tidak Aktif' }}
+        </VChip>
+      </template>
 
       <template #item.action="{ item }">
         <IconBtn
