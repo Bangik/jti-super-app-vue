@@ -79,6 +79,22 @@ export const routes = [
         ],
       },
       {
+        path: '/org-unit',
+        name: 'org-unit',
+        children: [
+          {
+            path: '',
+            name: 'org-unit.index',
+            component: () => import('@/pages/org-unit/IndexOrgUnit.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Unit',
+              back: false,
+            },
+          },
+        ],
+      },
+      {
         path: '/employee',
         name: 'employee',
         children: [

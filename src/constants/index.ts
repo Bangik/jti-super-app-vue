@@ -30,6 +30,14 @@ const sidebarAccount = computed(() => {
 const sidebarMaster = computed(() => {
   return [
     {
+      id: 0,
+      title: 'Data Organisasi',
+      disable: false,
+      hidden: false,
+      to: '/org-unit',
+      roles: ['superadmin', 'admin'] as string[],
+    },
+    {
       id: 1,
       title: 'Data Pegawai',
       disable: false,
