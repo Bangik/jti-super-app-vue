@@ -95,6 +95,22 @@ export const routes = [
         ],
       },
       {
+        path: '/position',
+        name: 'position',
+        children: [
+          {
+            path: '',
+            name: 'position.index',
+            component: () => import('@/pages/position/IndexPosition.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Posisi',
+              back: false,
+            },
+          },
+        ],
+      },
+      {
         path: '/employee',
         name: 'employee',
         children: [
