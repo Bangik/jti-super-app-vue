@@ -142,6 +142,15 @@ export const routes = [
               title: 'Detail Pegawai',
             },
           },
+          {
+            path: 'supervisor/:supervisorId/students',
+            name: 'employee.supervisor.students',
+            component: () => import('@/pages/employee/IndexSupervisor.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Mahasiswa Bimbingan',
+            },
+          },
         ],
       },
       {

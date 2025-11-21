@@ -106,6 +106,15 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: UserDetail) => {
       @update:sort-by="handleSort"
     >
       <template #item.no="{ index }">{{ index + 1 }}</template>
+      <template #item.status="{ item }">
+        <VChip
+          :color="item.status === 'ACTIVE' ? 'success' : 'error'"
+          class="text-capitalize"
+          size="small"
+        >
+          {{ item.status === 'ACTIVE' ? 'Aktif' : 'Tidak Aktif' }}
+        </VChip>
+      </template>
       <template #item.roles="{ item }">
         <VRow
           class="flex-wrap gap-1 mt-2 mb-2"

@@ -4,10 +4,11 @@ import {
   getEmployee,
   getEmployeeAsOptions,
   getEmployeeById,
+  getStudentSupervisors,
   updateEmployee,
 } from '@/services/employee'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { EmployeeDetail, EmployeeList, EmployeeOption, Position } from '@/types/employee'
+import type { EmployeeDetail, EmployeeList, EmployeeOption, Position, SupervisorStudentList } from '@/types/employee'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { EmployeeValues } from '@/constants/forms/employee'
@@ -81,5 +82,12 @@ export const useDeleteEmployee = () => {
     onError: error => {
       toast.error(error.message)
     },
+  })
+}
+
+export const useGetSupervisorStudentList = (pageQuery: Ref<PageQueryType>, employeeId: Ref<string>) => {
+  return useQuery<ResponseType<SupervisorStudentList[]>, Error>({
+    queryKey: ['supervisor-students', employeeId, pageQuery],
+    queryFn: () => getStudentSupervisors(pageQuery.value, employeeId.value),
   })
 }

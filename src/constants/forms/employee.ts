@@ -2,6 +2,7 @@ import * as yup from 'yup'
 
 export const EmployeeSchema = yup.object({
   m_major_id: yup.string().nullable(),
+  m_study_program_id: yup.string().nullable(),
   m_user_id: yup.string().nullable(),
   nip: yup.string().required('NIP / NIK wajib diisi').max(255),
   name: yup.string().required('Nama lengkap wajib diisi').max(255),
@@ -14,6 +15,7 @@ export const EmployeeSchema = yup.object({
   nationality: yup.string().nullable().max(255),
   phone_number: yup.string().nullable().max(20),
   position: yup.string().required('Jabatan wajib diisi'),
+  status: yup.string().nullable(),
   avatar: yup
     .mixed()
     .nullable()

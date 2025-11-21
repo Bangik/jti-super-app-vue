@@ -4,8 +4,9 @@ import { EmployeeSchema } from '@/constants/forms/employee'
 import { GENDER_OPTIONS, RELIGION_OPTIONS } from '@/constants/user'
 import { useAddEmployee, useUpdateEmployee } from '@/hooks/employee'
 import { useGetMajorAsOptions } from '@/hooks/major'
+import { useGetStudyProgramAsOptions } from '@/hooks/study-program'
 import type { EmployeeDetail, Position } from '@/types/employee'
-import type { Gender, Religion } from '@/types/user'
+import type { Gender, Religion, Status } from '@/types/user'
 import avatar1 from '@images/avatars/avatar-1.png'
 import { useForm } from 'vee-validate'
 import { useRouter } from 'vue-router'
@@ -43,7 +44,8 @@ const isPending = computed(() => (isAddMode.value ? createMutation.isPending : u
 const { errors, defineField, handleSubmit, resetForm } = useForm({
   validationSchema: EmployeeSchema,
   initialValues: {
-    m_major_id: '',
+    m_major_id: '' as string | undefined,
+    m_study_program_id: '' as string | undefined,
     m_user_id: undefined as string | undefined,
     nip: '',
     name: '',
@@ -56,11 +58,13 @@ const { errors, defineField, handleSubmit, resetForm } = useForm({
     nationality: '',
     phone_number: '',
     position: '' as Position,
+    status: '' as Status | undefined,
     avatar: null as File | null,
   },
 })
 
 const [m_major_id] = defineField('m_major_id')
+const [m_study_program_id] = defineField('m_study_program_id')
 const [nip] = defineField('nip')
 const [name] = defineField('name')
 const [email] = defineField('email')
@@ -72,7 +76,18 @@ const [address] = defineField('address')
 const [nationality] = defineField('nationality')
 const [phone_number] = defineField('phone_number')
 const [position] = defineField('position')
+const [status] = defineField('status')
 const [avatar] = defineField('avatar')
+
+const shouldFetchStudyProgram = computed(() => !!m_major_id.value)
+const {
+  data: studyProgramOptions,
+  isLoading: isLoadingStudyProgram,
+  isFetching: isFetchingStudyProgram,
+} = useGetStudyProgramAsOptions(
+  computed(() => m_major_id.value ?? ''),
+  shouldFetchStudyProgram,
+)
 
 const onSubmit = handleSubmit(async values => {
   if (!mutateAsync.value) return
@@ -107,7 +122,8 @@ const resetFormOnUpdate = () => {
   if (props.type === 'edit') {
     resetForm({
       values: {
-        m_major_id: props.data?.major?.id,
+        m_major_id: props.data?.major?.id == '' ? undefined : props.data?.major?.id,
+        m_study_program_id: props.data?.study_program?.id == '' ? undefined : props.data?.study_program?.id,
         m_user_id: props.data?.user?.id,
         nip: props.data?.nip,
         name: props.data?.user?.name,
@@ -120,6 +136,7 @@ const resetFormOnUpdate = () => {
         address: props.data?.user?.address,
         nationality: props.data?.user?.nationality,
         phone_number: props.data?.user?.phone_number,
+        status: props.data?.user?.status as Status,
         avatar: null,
       },
     })
@@ -128,6 +145,7 @@ const resetFormOnUpdate = () => {
     resetForm({
       values: {
         m_major_id: undefined,
+        m_study_program_id: undefined,
         m_user_id: undefined,
         nip: '',
         name: '',
@@ -140,6 +158,7 @@ const resetFormOnUpdate = () => {
         address: '',
         nationality: '',
         phone_number: '',
+        status: undefined,
         avatar: null,
       },
     })
@@ -153,6 +172,16 @@ watch(
     resetFormOnUpdate()
   },
   { immediate: true, deep: true },
+)
+
+watch(
+  () => m_major_id.value,
+  newValue => {
+    if (newValue === undefined || newValue === '' || newValue === null) {
+      m_study_program_id.value = undefined
+      m_major_id.value = undefined
+    }
+  },
 )
 </script>
 <template>
@@ -233,6 +262,23 @@ watch(
                   clearable
                   placeholder="Pilih jurusan pegawai"
                   :error-messages="errors.m_major_id"
+                />
+              </VCol>
+              <VCol
+                md="6"
+                cols="12"
+              >
+                <VAutocomplete
+                  :items="studyProgramOptions?.data"
+                  :loading="isLoadingStudyProgram || isFetchingStudyProgram || isLoading || isFetching"
+                  item-title="label"
+                  item-value="value"
+                  label="Program Studi"
+                  clearable
+                  placeholder="Pilih program studi pegawai"
+                  :error-messages="errors.m_study_program_id"
+                  :disabled="!m_major_id"
+                  v-model="m_study_program_id"
                 />
               </VCol>
               <VCol
@@ -377,6 +423,21 @@ watch(
                   placeholder="Masukkan kewarganegaraan"
                   label="Kewarganegaraan"
                   :error-messages="errors.nationality"
+                  :loading="isLoading || isFetching"
+                />
+              </VCol>
+
+              <VCol
+                v-if="!isAddMode"
+                md="6"
+                cols="12"
+              >
+                <VSelect
+                  v-model="status"
+                  :items="['ACTIVE', 'INACTIVE']"
+                  placeholder="Pilih status pegawai"
+                  label="Status Pegawai"
+                  :error-messages="errors.status"
                   :loading="isLoading || isFetching"
                 />
               </VCol>

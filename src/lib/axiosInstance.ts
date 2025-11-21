@@ -82,6 +82,16 @@ axiosInstance.interceptors.response.use(
         toast.error(message)
       }
 
+      if (error.response.data?.errors) {
+        Object.values(error.response.data.errors).forEach((errMsgs: unknown) => {
+          if (Array.isArray(errMsgs)) {
+            errMsgs.forEach(msg => toast.error(msg))
+          } else {
+            toast.error(String(errMsgs))
+          }
+        })
+      }
+
       console.error(message)
     } else {
       toast.error('Network error. Please check your connection.')

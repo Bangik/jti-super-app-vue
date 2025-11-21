@@ -153,7 +153,34 @@ const handleCloseModalDelete = () => {
         </div>
       </template>
 
+      <template #item.status="{ item }">
+        <VChip
+          :color="item.status === 'ACTIVE' ? 'success' : 'error'"
+          class="text-capitalize"
+          size="small"
+        >
+          {{ item.status === 'ACTIVE' ? 'Aktif' : 'Tidak Aktif' }}
+        </VChip>
+      </template>
+
       <template #item.action="{ item }">
+        <IconBtn
+          @click="$router.push({ name: 'employee.supervisor.students', params: { supervisorId: item.user_id } })"
+          class="mr-2"
+          icon="ri-group-line"
+          color="secondary"
+          :disabled="item.position !== 'DOSEN'"
+        >
+          <VIcon icon="ri-group-line" />
+          <VTooltip
+            activator="parent"
+            open-delay="300"
+            scroll-strategy="close"
+          >
+            <span class="text-capitalize">Mahasiswa Bimbingan</span>
+          </VTooltip>
+        </IconBtn>
+
         <IconBtn
           @click="$router.push({ name: 'employee.detail', params: { employeeId: item.id } })"
           class="mr-2"
