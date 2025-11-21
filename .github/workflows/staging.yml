@@ -46,6 +46,43 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Remove untagged images from GHCR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          OWNER_TYPE: ${{ github.event.repository.owner.type }}
+          PACKAGE: ${{ github.event.repository.name }}
+        run: |
+          set -euo pipefail
+
+          # Tentukan scope API (orgs/... atau users/...)
+          if [ "${OWNER_TYPE}" = "Organization" ]; then
+            SCOPE="orgs/${OWNER}"
+          else
+            SCOPE="users/${OWNER}"
+          fi
+
+          # Pastikan jq tersedia
+          if ! command -v jq >/dev/null 2>&1; then
+            sudo apt-get update -y
+            sudo apt-get install -y jq
+          fi
+
+          echo "Listing untagged versions for ghcr.io/${OWNER}/${PACKAGE} ..."
+          # --paginate untuk ambil semua halaman
+          gh api --paginate \
+            -H "Accept: application/vnd.github+json" \
+            "/${SCOPE}/packages/container/${PACKAGE}/versions?per_page=100" \
+          | jq -r '.[] | select(.metadata.container.tags | length == 0) | .id' \
+          | while read -r VID; do
+              echo "Deleting version id: ${VID}"
+              gh api --method DELETE \
+                -H "Accept: application/vnd.github+json" \
+                "/${SCOPE}/packages/container/${PACKAGE}/versions/${VID}"
+            done
+
+          echo "Done removing untagged images."
+
   deploy:
     runs-on: self-hosted
     needs: build
