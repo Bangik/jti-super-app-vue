@@ -2,6 +2,7 @@ export const headers = [
   { title: 'No', key: 'no' },
   { title: 'Kode', key: 'code' },
   { title: 'Program Studi', key: 'name' },
+  { title: 'Ketua Program Studi', key: 'head.name' },
   { title: 'Aksi', key: 'action' },
 ]
 
@@ -10,5 +11,6 @@ export const headersIndex = [
   { title: 'Kode', key: 'code' },
   { title: 'Program Studi', key: 'name' },
   { title: 'Jurusan', key: 'major.name' },
+  { title: 'Ketua Program Studi', key: 'head.name' },
   { title: 'Aksi', key: 'action' },
 ]
