@@ -1,4 +1,4 @@
-import type { EmployeeValues } from '@/constants/forms/employee'
+import type { EmployeeValues, SupervisorStudentValues } from '@/constants/forms/employee'
 import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
 import type { EmployeeDetail, EmployeeList, EmployeeOption, Position, SupervisorStudentList } from '@/types/employee'
@@ -72,4 +72,12 @@ export const getStudentSupervisors = (
       params: PageQuery,
     })
     .then(response => response.data)
+}
+
+export const deleteStudentSupervisor = (id: string): Promise<ResponseType<void>> => {
+  return axiosInstance.delete(`/supervisor-lectures/${id}`).then(response => response.data)
+}
+
+export const addStudentSupervisor = (data: SupervisorStudentValues): Promise<ResponseType> => {
+  return axiosInstance.post(`/supervisor-lectures`, data).then(response => response.data)
 }

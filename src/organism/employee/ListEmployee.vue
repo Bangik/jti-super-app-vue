@@ -165,7 +165,12 @@ const handleCloseModalDelete = () => {
 
       <template #item.action="{ item }">
         <IconBtn
-          @click="$router.push({ name: 'employee.supervisor.students', params: { supervisorId: item.user_id } })"
+          @click="
+            $router.push({
+              name: 'employee.supervisor.students',
+              params: { userId: item.user_id, employeeId: item.id },
+            })
+          "
           class="mr-2"
           icon="ri-group-line"
           color="secondary"

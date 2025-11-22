@@ -1,6 +1,6 @@
-import { addStudent, getStudent, getStudentById, updateStudent } from '@/services/student'
+import { addStudent, getStudent, getStudentAsOptions, getStudentById, updateStudent } from '@/services/student'
 import type { ResponseType, PageQueryType } from '@/types'
-import type { StudentDetail, StudentList } from '@/types/student'
+import type { StudentDetail, StudentList, StudentOptions } from '@/types/student'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { StudentUpdateValues } from '@/constants/forms/student'
@@ -9,6 +9,18 @@ export const useGetStudent = (pageQuery: Ref<PageQueryType>) => {
   return useQuery<ResponseType<StudentList[]>, Error>({
     queryKey: ['students', pageQuery],
     queryFn: () => getStudent(pageQuery.value),
+  })
+}
+
+export const useGetStudentAsOptions = (
+  majorId?: Ref<string>,
+  studyProgramId?: Ref<string>,
+  enabled: Ref<boolean> = ref(true),
+) => {
+  return useQuery<ResponseType<StudentOptions[]>, Error>({
+    queryKey: ['students', 'options', majorId, studyProgramId],
+    queryFn: () => getStudentAsOptions(majorId?.value ?? '', studyProgramId?.value ?? ''),
+    enabled,
   })
 }
 

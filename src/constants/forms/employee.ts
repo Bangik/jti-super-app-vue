@@ -1,4 +1,5 @@
 import * as yup from 'yup'
+import { SUPERVISOR_POSITION } from '../employee'
 
 export const EmployeeSchema = yup.object({
   m_major_id: yup.string().nullable(),
@@ -37,3 +38,13 @@ export const EmployeeSchema = yup.object({
 })
 
 export type EmployeeValues = yup.InferType<typeof EmployeeSchema>
+
+export const SupervisorStudentSchema = yup.object({
+  m_major_id: yup.string().required('Jurusan wajib diisi'),
+  m_study_program_id: yup.string().required('Program Studi wajib diisi'),
+  m_employee_id: yup.string().required('Karyawan wajib diisi'),
+  m_student_id: yup.string().required('Mahasiswa wajib diisi'),
+  position: yup.string().oneOf(SUPERVISOR_POSITION, 'Posisi tidak valid').required('Posisi wajib diisi'),
+})
+
+export type SupervisorStudentValues = yup.InferType<typeof SupervisorStudentSchema>

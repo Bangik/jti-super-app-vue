@@ -143,7 +143,7 @@ export const routes = [
             },
           },
           {
-            path: 'supervisor/:supervisorId/students',
+            path: 'supervisor/:userId/:employeeId/students',
             name: 'employee.supervisor.students',
             component: () => import('@/pages/employee/IndexSupervisor.vue'),
             meta: {

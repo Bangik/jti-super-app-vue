@@ -1,6 +1,8 @@
 import {
   addEmployee,
+  addStudentSupervisor,
   deleteEmployee,
+  deleteStudentSupervisor,
   getEmployee,
   getEmployeeAsOptions,
   getEmployeeById,
@@ -89,5 +91,33 @@ export const useGetSupervisorStudentList = (pageQuery: Ref<PageQueryType>, emplo
   return useQuery<ResponseType<SupervisorStudentList[]>, Error>({
     queryKey: ['supervisor-students', employeeId, pageQuery],
     queryFn: () => getStudentSupervisors(pageQuery.value, employeeId.value),
+  })
+}
+
+export const useDeleteSupervisorStudent = () => {
+  const { queryClient, toast } = useMutationResources()
+  return useMutation({
+    mutationFn: deleteStudentSupervisor,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['supervisor-students'] })
+      toast.success('Mahasiswa berhasil dihapus dari pembimbing')
+    },
+    onError: error => {
+      toast.error(error.message)
+    },
+  })
+}
+
+export const useAddSupervisorStudent = () => {
+  const { queryClient, toast } = useMutationResources()
+  return useMutation({
+    mutationFn: addStudentSupervisor,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['supervisor-students'] })
+      toast.success('Mahasiswa berhasil ditambahkan')
+    },
+    onError: error => {
+      toast.error(error.message)
+    },
   })
 }

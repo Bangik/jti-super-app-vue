@@ -72,3 +72,8 @@ export type StudentDetail = {
   created_at: string
   updated_at: string
 }
+
+export type StudentOptions = {
+  id: string
+  name: string
+}
