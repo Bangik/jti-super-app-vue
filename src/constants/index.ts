@@ -31,7 +31,7 @@ const sidebarMaster = computed(() => {
   return [
     {
       id: 0,
-      title: 'Data Organisasi',
+      title: 'Data Unit',
       disable: false,
       hidden: false,
       to: '/org-unit',

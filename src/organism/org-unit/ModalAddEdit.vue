@@ -91,8 +91,8 @@ const resetFormOnUpdate = () => {
       values: {
         code: '',
         name: '',
-        unit_type: '' as OrgUnitType,
-        parent_id: '' as string,
+        unit_type: undefined,
+        parent_id: undefined,
       },
     })
   }
