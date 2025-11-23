@@ -92,6 +92,16 @@ export const routes = [
               back: false,
             },
           },
+          {
+            path: 'history-head/:orgUnitId',
+            name: 'org-unit.history-head',
+            component: () => import('@/pages/org-unit/IndexHistoryHead.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Riwayat Pejabat',
+              back: true,
+            },
+          },
         ],
       },
       {

@@ -1,9 +1,17 @@
-import { addOrgUnit, deleteOrgUnit, getOrgUnit, getOrgUnitAsOptions, updateOrgUnit } from '@/services/org-unit'
+import {
+  addHeadOrgUnit,
+  addOrgUnit,
+  deleteOrgUnit,
+  getHistoryHeadById,
+  getOrgUnit,
+  getOrgUnitAsOptions,
+  updateOrgUnit,
+} from '@/services/org-unit'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { OrgUnitList, OrgUnitOption } from '@/types/org-unit'
+import type { HistoryHead, OrgUnitList, OrgUnitOption } from '@/types/org-unit'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
-import type { OrgUnitValues } from '@/constants/forms/org-unit'
+import type { OrgUnitHeadValues, OrgUnitValues } from '@/constants/forms/org-unit'
 
 export const useGetOrgUnit = (pageQuery: Ref<PageQueryType>) => {
   return useQuery<ResponseType<OrgUnitList[]>, Error>({
@@ -58,6 +66,27 @@ export const useDeleteOrgUnit = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['org-units'] })
       toast.success('Unit organisasi berhasil dihapus')
+    },
+    onError: error => {
+      toast.error(error.message)
+    },
+  })
+}
+
+export const useGetOrgUnitById = (id: Ref<string>, pageQuery: Ref<PageQueryType>) => {
+  return useQuery<ResponseType<HistoryHead[]>, Error>({
+    queryKey: ['org-units', id, 'history', pageQuery],
+    queryFn: () => getHistoryHeadById(id.value, pageQuery.value),
+  })
+}
+
+export const useStoreHeadOrgUnit = (id: Ref<string>) => {
+  const { queryClient, toast } = useMutationResources()
+  return useMutation({
+    mutationFn: (data: OrgUnitHeadValues) => addHeadOrgUnit(id.value, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['org-units', id, 'history'] })
+      toast.success('Pejabat unit organisasi berhasil ditambahkan')
     },
     onError: error => {
       toast.error(error.message)

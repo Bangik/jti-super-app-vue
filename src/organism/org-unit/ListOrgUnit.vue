@@ -136,6 +136,22 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: OrgUnitList) => {
 
       <template #item.action="{ item }">
         <IconBtn
+          :to="{ name: 'org-unit.history-head', params: { orgUnitId: item.id } }"
+          class="mr-2"
+          icon="ri-user-2-fill"
+          color="primary"
+        >
+          <VIcon icon="ri-user-2-fill" />
+          <VTooltip
+            activator="parent"
+            open-delay="300"
+            scroll-strategy="close"
+          >
+            <span class="text-capitalize">Riwayat Pejabat</span>
+          </VTooltip>
+        </IconBtn>
+
+        <IconBtn
           @click="handleOpenModalAddEdit('edit', item)"
           class="mr-2"
           icon="ri-pencil-line"
