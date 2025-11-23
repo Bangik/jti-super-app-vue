@@ -136,6 +136,41 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: MajorList) => {
 
       <template #item.action="{ item }">
         <IconBtn
+          :to="{ name: 'org-unit.history-head', params: { orgUnitId: item.org_unit_id } }"
+          class="mr-2"
+          icon="ri-user-2-fill"
+          color="primary"
+        >
+          <VIcon icon="ri-user-2-fill" />
+          <VTooltip
+            activator="parent"
+            open-delay="300"
+            scroll-strategy="close"
+          >
+            <span class="text-capitalize">Riwayat Pejabat</span>
+          </VTooltip>
+        </IconBtn>
+        <IconBtn
+          @click="
+            $router.push({
+              name: 'major.detail.study-program.index',
+              params: {
+                majorId: item.id,
+              },
+            })
+          "
+          color="primary"
+        >
+          <VIcon icon="ri-file-list-3-line" />
+          <VTooltip
+            activator="parent"
+            open-delay="300"
+            scroll-strategy="close"
+          >
+            <span class="text-capitalize">List Prodi</span>
+          </VTooltip>
+        </IconBtn>
+        <IconBtn
           @click="handleOpenModalAddEdit('edit', item)"
           class="mr-2"
           icon="ri-pencil-line"
@@ -163,27 +198,6 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: MajorList) => {
             scroll-strategy="close"
           >
             <span class="text-capitalize">Hapus</span>
-          </VTooltip>
-        </IconBtn>
-
-        <IconBtn
-          @click="
-            $router.push({
-              name: 'major.detail.study-program.index',
-              params: {
-                majorId: item.id,
-              },
-            })
-          "
-          color="primary"
-        >
-          <VIcon icon="ri-file-list-3-line" />
-          <VTooltip
-            activator="parent"
-            open-delay="300"
-            scroll-strategy="close"
-          >
-            <span class="text-capitalize">List Prodi</span>
           </VTooltip>
         </IconBtn>
       </template>
