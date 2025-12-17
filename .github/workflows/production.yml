@@ -1,0 +1,77 @@
+name: Test and Deploy to Production
+
+on:
+  push:
+    branches: ['production']
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create .env.production file from secret
+        run: echo "${{ secrets.ENV_PRODUCTION_FILE }}" > .env.production
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          file: Dockerfile.staging
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST_PRODUCTION }}
+          username: ${{ secrets.SSH_USERNAME_PRODUCTION }}
+          password: ${{ secrets.SSH_PASSWORD_PRODUCTION }}
+          script: |
+            set -e
+
+            echo "Pulling latest image..."
+            docker pull ghcr.io/${{ github.repository }}:production
+
+            echo "Stopping superapp-fe if running..."
+            docker stop superapp-fe || true
+            docker rm superapp-fe || true
+
+            docker run -d --name superapp-fe -p 8001:80 ghcr.io/${{ github.repository }}:production
+
+            echo "Cleaning up old images..."
+            docker image prune -f
+
+            echo "Deployment complete."
