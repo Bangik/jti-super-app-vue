@@ -10,7 +10,7 @@ RUN npm i
 COPY . .
 COPY .env.production .env
 
-RUN npm run build
+RUN npm run build --base=/superapp/
 
 FROM nginx:alpine
 
