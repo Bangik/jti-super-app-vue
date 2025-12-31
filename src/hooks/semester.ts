@@ -32,7 +32,7 @@ export const useGetSemesterAsOptions = (sessionId?: Ref<string>, enabled: Ref<bo
 export const useSettingSubjectSemester = (semesterId: Ref<string>, studyProgramId: Ref<string>) => {
   const { queryClient, toast } = useMutationResources()
   return useMutation({
-    mutationFn: (subjectIds: string[]) => settingSubjectSemester(semesterId.value, subjectIds),
+    mutationFn: (subjectIds: string[]) => settingSubjectSemester(semesterId.value, studyProgramId.value, subjectIds),
     onMutate: async (updatedData: string[]) => {
       await queryClient.cancelQueries({ queryKey: ['semesters', semesterId] })
       return updatedData
