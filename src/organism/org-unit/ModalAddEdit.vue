@@ -136,7 +136,7 @@ watch(
               />
             </VCol>
             <VCol cols="12">
-              <VSelect
+              <VAutocomplete
                 required
                 label="Tipe Unit"
                 :items="ORG_UNIT_TYPE_VALUES"
@@ -145,7 +145,7 @@ watch(
               />
             </VCol>
             <VCol cols="12">
-              <VSelect
+              <VAutocomplete
                 :items="orgUnitOption?.data || []"
                 item-title="label"
                 item-value="value"
