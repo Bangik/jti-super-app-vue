@@ -54,6 +54,14 @@ const sidebarMaster = computed(() => {
       roles: ['superadmin', 'admin'] as string[],
     },
     {
+      id: 5,
+      title: 'Data Mahasiswa',
+      disable: false,
+      hidden: false,
+      to: '/student',
+      roles: ['superadmin', 'admin'] as string[],
+    },
+    {
       id: 2,
       title: 'Data Jurusan',
       icon: '',
@@ -86,11 +94,11 @@ const sidebarMaster = computed(() => {
       roles: ['superadmin', 'admin'] as string[],
     },
     {
-      id: 5,
-      title: 'Data Mahasiswa',
+      id: 7,
+      title: 'Data Ruangan',
       disable: false,
       hidden: false,
-      to: '/student',
+      to: '/rooms',
       roles: ['superadmin', 'admin'] as string[],
     },
   ]

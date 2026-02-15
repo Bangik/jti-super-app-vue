@@ -258,6 +258,15 @@ export const routes = [
         ],
       },
       {
+        path: '/rooms',
+        name: 'rooms',
+        component: () => import('@/pages/room/IndexRoom.vue'),
+        meta: {
+          back: false,
+          title: 'Manajemen Ruangan',
+        },
+      },
+      {
         path: '/session',
         name: 'session',
         children: [
