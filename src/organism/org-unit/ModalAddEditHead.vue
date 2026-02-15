@@ -3,19 +3,19 @@ import { OrgUnitHeadSchema } from '@/constants/forms/org-unit'
 import { useGetEmployeeAsOptions } from '@/hooks/employee'
 import { useStoreHeadOrgUnit } from '@/hooks/org-unit'
 import { useGetPositionAsOptions } from '@/hooks/position'
-import type { Position } from '@/types/employee'
+// import type { Position } from '@/types/employee'
 import { useForm } from 'vee-validate'
 
 const route = useRoute()
 const dialog = defineModel<boolean>()
-const position = ref<Position>('DOSEN' as Position)
+// const position = ref<Position>('DOSEN' as Position)
 const id = ref<string>(route.params.orgUnitId as string)
 
 const {
   data: employeeOptions,
   isLoading: isLoadingEmployee,
   isFetching: isFetchingEmployee,
-} = useGetEmployeeAsOptions(undefined, position)
+} = useGetEmployeeAsOptions(undefined, undefined)
 
 const {
   data: positionOptions,
@@ -87,7 +87,7 @@ const cancel = () => {
                 :loading="isLoadingEmployee || isFetchingEmployee"
                 item-title="label"
                 item-value="value"
-                label="Pilih dosen"
+                label="Pilih pegawai"
                 placeholder="Ketik nama…"
                 clearable
                 required
@@ -96,7 +96,7 @@ const cancel = () => {
               />
             </VCol>
             <VCol cols="12">
-              <VSelect
+              <VAutocomplete
                 :items="positionOptions?.data"
                 :loading="isLoadingPosition || isFetchingPosition"
                 item-title="label"
