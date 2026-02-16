@@ -39,3 +39,11 @@ export type SelectedLectureData = {
     lecture_ids: Array<string>
   }>
 }
+
+export type SubjectSemesterOption = {
+  id: string
+  subject_id: string
+  semester_id: string
+  name: string
+  code: string
+}

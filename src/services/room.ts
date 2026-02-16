@@ -36,9 +36,3 @@ export const deleteRoom = async (id: string) => {
   const response = await axiosInstance.delete(`${BASE_URL}/${id}`)
   return response.data
 }
-
-// Untuk dropdown di fitur lain (misal Schedule)
-export const getRoomsOptions = async () => {
-  const response = await axiosInstance.get(`${BASE_URL}/options`)
-  return response.data
-}

@@ -146,6 +146,14 @@ const sidebarAcademic = computed(() => {
       to: '/subject/lecture',
       roles: ['superadmin', 'admin'] as string[],
     },
+    {
+      id: 6,
+      title: 'Data Jadwal',
+      disable: false,
+      hidden: false,
+      to: '/schedule',
+      roles: ['superadmin', 'admin'] as string[],
+    },
   ]
 })
 

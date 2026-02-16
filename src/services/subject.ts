@@ -1,7 +1,13 @@
 import type { SubjectValues } from '@/constants/forms/subject'
 import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { LectureOnSubject, SelectedLectureData, SubjectList, SubjectOption } from '@/types/subject'
+import type {
+  LectureOnSubject,
+  SelectedLectureData,
+  SubjectList,
+  SubjectOption,
+  SubjectSemesterOption,
+} from '@/types/subject'
 
 export const getSubject = async (PageQuery: PageQueryType): Promise<ResponseType<SubjectList[]>> => {
   const response = await axiosInstance.get(`/subjects`, {
@@ -16,6 +22,21 @@ export const getSubjectAsOptions = async (
 ): Promise<ResponseType<SubjectOption[]>> => {
   const response = await axiosInstance.get(`/subjects/options`, {
     params: { study_program_id: studyProgramId, semester_id: semesterId },
+  })
+  return response.data
+}
+
+export const getSubjectSemesterAsOptions = async (
+  studyProgramId?: string,
+  subjectId?: string,
+  semesterId?: string,
+): Promise<ResponseType<SubjectSemesterOption[]>> => {
+  const response = await axiosInstance.get(`/subjects/semester/options`, {
+    params: {
+      study_program_id: studyProgramId,
+      subject_id: subjectId,
+      semester_id: semesterId,
+    },
   })
   return response.data
 }

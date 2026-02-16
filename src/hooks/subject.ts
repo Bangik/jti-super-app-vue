@@ -4,11 +4,18 @@ import {
   getLectureOnSubject,
   getSubject,
   getSubjectAsOptions,
+  getSubjectSemesterAsOptions,
   storeLectureOnSubject,
   updateSubject,
 } from '@/services/subject'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { LectureOnSubject, SelectedLectureData, SubjectList, SubjectOption } from '@/types/subject'
+import type {
+  LectureOnSubject,
+  SelectedLectureData,
+  SubjectList,
+  SubjectOption,
+  SubjectSemesterOption,
+} from '@/types/subject'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { SubjectValues } from '@/constants/forms/subject'
@@ -28,6 +35,20 @@ export const useGetSubjectAsOptions = (
   return useQuery<ResponseType<SubjectOption[]>, Error>({
     queryKey: ['subjects', 'options', studyProgramId, semesterId],
     queryFn: () => getSubjectAsOptions(studyProgramId?.value ?? '', semesterId?.value ?? ''),
+    enabled,
+  })
+}
+
+export const useGetSubjectSemesterAsOptions = (
+  studyProgramId?: Ref<string>,
+  subjectId?: Ref<string>,
+  semesterId?: Ref<string>,
+  enabled: Ref<boolean> = ref(true),
+) => {
+  return useQuery<ResponseType<SubjectSemesterOption[]>, Error>({
+    queryKey: ['subjects', 'semester-options', studyProgramId, subjectId, semesterId],
+    queryFn: () =>
+      getSubjectSemesterAsOptions(studyProgramId?.value ?? '', subjectId?.value ?? '', semesterId?.value ?? ''),
     enabled,
   })
 }

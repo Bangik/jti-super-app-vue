@@ -267,6 +267,15 @@ export const routes = [
         },
       },
       {
+        path: '/schedule',
+        name: 'schedule',
+        component: () => import('@/pages/schedule/IndexSchedule.vue'),
+        meta: {
+          back: false,
+          title: 'Manajemen Jadwal',
+        },
+      },
+      {
         path: '/session',
         name: 'session',
         children: [

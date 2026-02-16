@@ -142,7 +142,7 @@ const handleOpenModalDelete = (item: StudentList) => {
     <VCardItem>
       <VCardTitle class="text-lg">Filter</VCardTitle>
     </VCardItem>
-    <VCardText class="d-flex flex-wrap gap-3">
+    <VCardText class="d-flex flex-wrap gap-3 items-center flex-column flex-sm-row">
       <VAutocomplete
         label="Jurusan"
         v-model="filter.major_id"
