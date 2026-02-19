@@ -10,6 +10,7 @@ import { useForm } from 'vee-validate'
 import { useGetRoomsOptions } from '@/hooks/room'
 import { useGetSubjectSemesterAsOptions } from '@/hooks/subject'
 import { DAYS_OF_WEEK } from '@/constants/day'
+import { useGetEmployeeAsOptions } from '@/hooks/employee'
 
 interface Props {
   type?: 'add' | 'edit' | 'delete'
@@ -41,6 +42,7 @@ const { handleSubmit, defineField, resetForm, setValues, errors } = useForm({
     day_of_week: undefined as string | undefined,
     start_time: '',
     end_time: '',
+    employee_id: undefined as string | undefined,
   },
 })
 
@@ -53,6 +55,7 @@ const [classGroup] = defineField('class_group')
 const [dayOfWeek] = defineField('day_of_week')
 const [startTime] = defineField('start_time')
 const [endTime] = defineField('end_time')
+const [employeeId] = defineField('employee_id')
 
 const { data: sessionOptions, isLoading: isLoadingSession, isFetching: isFetchingSession } = useGetSessionAsOptions()
 
@@ -83,6 +86,12 @@ const {
   computed(() => semesterId.value ?? ''),
   shouldFetchSubjectSemester,
 )
+
+const {
+  data: technicianOptions,
+  isLoading: isLoadingTechnician,
+  isFetching: isFetchingTechnician,
+} = useGetEmployeeAsOptions(ref(''), ref('TEKNISI'))
 
 const safeSubjectOptions = computed(() => {
   const list = subjectSemesterOptions.value?.data
@@ -127,6 +136,7 @@ const resetFormOnUpdate = async () => {
       day_of_week: props.data.day_of_week,
       start_time: props.data.start_time,
       end_time: props.data.end_time,
+      employee_id: props.data.employee_id,
     })
 
     await nextTick()
@@ -145,6 +155,7 @@ const resetFormOnUpdate = async () => {
         day_of_week: undefined,
         start_time: '',
         end_time: '',
+        employee_id: undefined,
       },
     })
   }
@@ -347,6 +358,22 @@ const close = () => {
                 type="time"
                 v-model="endTime"
                 :error-messages="errors.end_time"
+              />
+            </VCol>
+            <VCol
+              cols="12"
+              md="12"
+            >
+              <VAutocomplete
+                :items="technicianOptions?.data"
+                item-title="label"
+                item-value="value"
+                label="Pilih Teknisi"
+                clearable
+                :loading="isLoadingTechnician || isFetchingTechnician"
+                :disabled="!studyProgramId || !semesterId"
+                v-model="employeeId"
+                :error-messages="errors.employee_id"
               />
             </VCol>
           </VRow>

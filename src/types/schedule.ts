@@ -16,6 +16,10 @@ export type ScheduleList = {
   day_of_week: string
   start_time: string
   end_time: string
+  user_id: string
+  user_name: string
+  employee_id: string
+  user_email: string
 }
 
 export type FilterSchedule = {
@@ -23,4 +27,5 @@ export type FilterSchedule = {
   study_program_id?: string
   class_group?: string
   semester_id?: string
+  employee_id?: string
 }

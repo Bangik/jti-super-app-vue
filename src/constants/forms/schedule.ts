@@ -16,6 +16,7 @@ export const ScheduleSchema = yup.object({
     .required('Hari wajib dipilih'),
   start_time: yup.string().required('Waktu mulai wajib diisi'),
   end_time: yup.string().required('Waktu selesai wajib diisi'),
+  employee_id: yup.string().uuid().nullable(),
 })
 
 export type ScheduleValues = yup.InferType<typeof ScheduleSchema>

@@ -56,5 +56,15 @@ export type SupervisorStudentList = {
   position: SupervisorPosition
 }
 
+export type TechnicianList = {
+  id: string
+  user_id: string
+  name: string
+  email: string
+  nip: string
+  avatar: string | null
+  total_schedule: number
+}
+
 export type Position = 'DOSEN' | 'TEKNISI' | 'ADMINISTRASI'
 export type SupervisorPosition = 'ACADEMIC_ADVISOR' | 'SUPERVISOR_1' | 'SUPERVISOR_2' | 'SUPERVISOR_INTERNSHIP'

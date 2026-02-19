@@ -10,6 +10,7 @@ import { useGetStudyProgramAsOptions } from '@/hooks/study-program'
 import { useGetSessionAsOptions } from '@/hooks/session'
 import { useGetSemesterAsOptions } from '@/hooks/semester'
 import { CLASS_LIST } from '@/constants/student'
+import { useGetEmployeeAsOptions } from '@/hooks/employee'
 
 const last_page = ref(1)
 const total = ref(0)
@@ -34,6 +35,7 @@ const filter = ref<FilterSchedule>({
   study_program_id: undefined as string | undefined,
   semester_id: undefined as string | undefined,
   class_group: undefined as string | undefined,
+  employee_id: undefined as string | undefined,
 })
 
 const sessionId = ref<string | undefined>(undefined)
@@ -41,9 +43,11 @@ const majorId = ref<string | undefined>(undefined)
 const studyProgramId = ref<string | undefined>(undefined)
 const semesterId = ref<string | undefined>(undefined)
 const classGroup = ref<string | undefined>(undefined)
+const technicianId = ref<string | undefined>(undefined)
 
 const shouldFetchStudyProgram = computed(() => !!majorId.value)
 const shouldFetchSemester = computed(() => !!sessionId.value)
+const shouldFetchTechnician = computed(() => !!majorId.value)
 
 const { data: majorOption, isLoading: isLoadingMajor, isFetching: isFetchingMajor } = useGetMajorAsOptions()
 const {
@@ -63,14 +67,24 @@ const {
   computed(() => sessionId.value || ''),
   shouldFetchSemester,
 )
+const {
+  data: technicianOptions,
+  isLoading: isLoadingTechnician,
+  isFetching: isFetchingTechnician,
+} = useGetEmployeeAsOptions(
+  computed(() => majorId.value ?? ''),
+  ref('TEKNISI'),
+  shouldFetchTechnician,
+)
 
 watch(
-  [majorId, studyProgramId, semesterId, classGroup],
+  [majorId, studyProgramId, semesterId, classGroup, technicianId],
   () => {
     filter.value.major_id = majorId.value
     filter.value.study_program_id = studyProgramId.value
     filter.value.semester_id = semesterId.value
     filter.value.class_group = classGroup.value
+    filter.value.employee_id = technicianId.value
   },
   { deep: true },
 )
@@ -97,12 +111,17 @@ watch(
 watch(
   filter,
   newVal => {
-    const isNotEmpty = Object.values(newVal).some(v => v) // minimal 1 filter terisi
-    if (isNotEmpty) {
-      pageQuery.value.filter = JSON.stringify(newVal)
+    // 🧹 hapus field kosong
+    const cleanedFilter = Object.fromEntries(
+      Object.entries(newVal).filter(([, v]) => v !== null && v !== undefined && v !== ''),
+    )
+
+    if (Object.keys(cleanedFilter).length > 0) {
+      pageQuery.value.filter = JSON.stringify(cleanedFilter)
     } else {
       pageQuery.value.filter = undefined
     }
+
     pageQuery.value.page = 1
   },
   { deep: true },
@@ -212,6 +231,16 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: ScheduleList) => {
         clearable
         :loading="isLoadingSemester || isFetchingSemester"
         :disabled="!sessionId"
+      />
+      <VAutocomplete
+        label="Teknisi"
+        v-model="technicianId"
+        :items="technicianOptions?.data"
+        item-title="label"
+        item-value="value"
+        clearable
+        :loading="isLoadingTechnician || isFetchingTechnician"
+        :disabled="!majorId"
       />
     </VCardText>
   </VCard>
