@@ -9,6 +9,8 @@ export type MeResponse = {
 
 export type LoginResponse = {
   token: string
+  refresh_token: string
+  expires_in: number
   user: MeResponse
 }
 

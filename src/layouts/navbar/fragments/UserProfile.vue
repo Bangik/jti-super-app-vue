@@ -6,7 +6,7 @@ import avatar1 from '@images/avatars/avatar-1.png'
 const { mutateAsync, isPending } = useLogout()
 const authStore = useAuthStore()
 const handleLogout = async () => {
-  await mutateAsync()
+  await mutateAsync({ refresh_token: authStore.getRefreshToken })
 }
 </script>
 

@@ -18,8 +18,8 @@ export const useResetPassword = async (data: ResetPasswordValues): Promise<Respo
   return response.data
 }
 
-export const logoutService = async (): Promise<ResponseType<string>> => {
-  const response = await axiosInstance.post('/auth/logout')
+export const logoutService = async (data: { refresh_token: string }): Promise<ResponseType<string>> => {
+  const response = await axiosInstance.post('/auth/logout', data)
   return response.data
 }
 

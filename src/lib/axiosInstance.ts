@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true
 
       const authStore = useAuthStore()
-      const refreshToken = authStore.getToken
+      const refreshToken = authStore.getRefreshToken
 
       if (!refreshToken) {
         window.location.href = '/login'
@@ -62,7 +62,12 @@ axiosInstance.interceptors.response.use(
 
         if (response.status === 200) {
           const token = response.data.data.token
+          const refreshToken = response.data.data.refresh_token
+          const expiresIn = response.data.data.expires_in
+
           authStore.setToken(token)
+          authStore.setRefreshToken(refreshToken)
+          authStore.setExpiresIn(expiresIn)
 
           originalRequest.headers.Authorization = `Bearer ${token}`
           return axiosInstance(originalRequest)

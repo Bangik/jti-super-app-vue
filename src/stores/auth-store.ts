@@ -5,6 +5,8 @@ import { defineStore } from 'pinia'
 export const useAuthStore = defineStore('auth-store', {
   state: (): LoginStore => ({
     token: '',
+    refresh_token: '',
+    expires_in: 0,
     server: import.meta.env.VITE_API_URL,
     user: {
       id: '',
@@ -19,6 +21,12 @@ export const useAuthStore = defineStore('auth-store', {
   getters: {
     getToken(state) {
       return state.token
+    },
+    getRefreshToken(state) {
+      return state.refresh_token
+    },
+    getExpiresIn(state) {
+      return state.expires_in
     },
     getUser(state) {
       return state.user
@@ -39,6 +47,12 @@ export const useAuthStore = defineStore('auth-store', {
     setToken(token: string) {
       this.token = token
     },
+    setRefreshToken(refresh_token: string) {
+      this.refresh_token = refresh_token
+    },
+    setExpiresIn(expires_in: number) {
+      this.expires_in = expires_in
+    },
     setUser(user: LoginStore['user']) {
       this.user = user
     },
@@ -47,13 +61,15 @@ export const useAuthStore = defineStore('auth-store', {
     },
     setUserAccess(data: Partial<LoginStore>) {
       if (data.token) this.token = data.token
+      if (data.refresh_token) this.refresh_token = data.refresh_token
+      if (data.expires_in !== undefined) this.expires_in = data.expires_in
       if (data.user) this.user = data.user
       if (data.server) this.server = data.server
     },
 
     async logout() {
       try {
-        const response = await logoutService()
+        const response = await logoutService({ refresh_token: this.refresh_token })
 
         if (response.status_code === 200) {
           this.$reset()
