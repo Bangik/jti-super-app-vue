@@ -79,7 +79,9 @@ watch(
   newVal => {
     const isNotEmpty = Object.values(newVal).some(v => v) // minimal 1 filter terisi
     if (isNotEmpty) {
-      pageQuery.value.filter = JSON.stringify(newVal)
+      // buang jika value undefined atau null, karena akan mempengaruhi query string
+      const filteredVal = Object.fromEntries(Object.entries(newVal).filter(([, v]) => v !== undefined && v !== null))
+      pageQuery.value.filter = JSON.stringify(filteredVal)
     } else {
       pageQuery.value.filter = undefined
     }
