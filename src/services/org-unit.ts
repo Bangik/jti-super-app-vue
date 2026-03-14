@@ -49,3 +49,8 @@ export const addHeadOrgUnit = async (id: string, data: OrgUnitHeadValues): Promi
   const response = await axiosInstance.post(`/org-units/${id}/heads`, data)
   return response.data
 }
+
+export const deactivateHeadOrgUnit = async (id: string, assignmentId: string): Promise<ResponseType<null>> => {
+  const response = await axiosInstance.delete(`/org-units/${id}/heads/${assignmentId}`)
+  return response.data
+}

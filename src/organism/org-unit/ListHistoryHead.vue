@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { headersHistoryHead } from '@/constants/tables/org-unit'
-import { useGetOrgUnitById } from '@/hooks/org-unit'
+import { useDeactivateHeadOrgUnit, useGetOrgUnitById } from '@/hooks/org-unit'
 import type { PageQueryType, SortItem } from '@/types'
 import ModalAddEditHead from '@/organism/org-unit/ModalAddEditHead.vue'
-// import type { HistoryHead } from '@/types/org-unit'
+import ModalConfirmation from '@/components/modal/ModalConfirmation.vue'
+import type { HistoryHead } from '@/types/org-unit'
 
 const route = useRoute()
 const last_page = ref(1)
@@ -11,6 +12,8 @@ const total = ref(0)
 const search = ref('')
 const id = ref<string>(route.params.orgUnitId as string)
 const dialog = ref(false)
+const selectedAssignment = ref<HistoryHead | null>(null)
+const openDeactivateDialog = ref(false)
 
 const pageQuery = ref<PageQueryType>({
   search: '',
@@ -21,6 +24,11 @@ const pageQuery = ref<PageQueryType>({
 })
 
 const { data, isLoading, isFetching, error } = useGetOrgUnitById(id, pageQuery)
+const {
+  mutateAsync: deactivateHeadAssignment,
+  isPending: isPendingDeactivate,
+  isSuccess: isSuccessDeactivate,
+} = useDeactivateHeadOrgUnit(id)
 
 watch(
   () => data.value,
@@ -58,6 +66,28 @@ const handleSort = (sort: Array<SortItem>) => {
 
   const sortOrder = sort[0].order === 'asc' ? '' : '-'
   pageQuery.value.sort = `${sortOrder}${sort[0].key}`
+}
+
+const handleOpenDeactivateModal = (item: HistoryHead) => {
+  selectedAssignment.value = item
+  openDeactivateDialog.value = true
+}
+
+const handleCloseDeactivateModal = () => {
+  selectedAssignment.value = null
+  openDeactivateDialog.value = false
+}
+
+const handleDeactivate = async () => {
+  if (!selectedAssignment.value?.id) {
+    return
+  }
+
+  await deactivateHeadAssignment(selectedAssignment.value.id)
+
+  if (isSuccessDeactivate.value) {
+    handleCloseDeactivateModal()
+  }
 }
 </script>
 
@@ -110,8 +140,48 @@ const handleSort = (sort: Array<SortItem>) => {
           {{ item.is_active ? 'Aktif' : 'Tidak Aktif' }}
         </VChip>
       </template>
+
+      <template #item.action="{ item }">
+        <IconBtn
+          v-if="item.is_active"
+          class="mr-2"
+          @click="handleOpenDeactivateModal(item)"
+          color="warning"
+        >
+          <VIcon icon="ri-user-unfollow-line" />
+          <VTooltip
+            activator="parent"
+            open-delay="300"
+            scroll-strategy="close"
+          >
+            <span class="text-capitalize">Nonaktifkan</span>
+          </VTooltip>
+        </IconBtn>
+      </template>
     </VDataTableServer>
   </VCard>
 
   <ModalAddEditHead v-model="dialog" />
+
+  <ModalConfirmation
+    v-model="openDeactivateDialog"
+    :title="`Apakah anda ingin menonaktifkan pegawai ini?`"
+    sub-title="Penugasan jabatan yang dinonaktifkan tidak akan lagi tercatat sebagai aktif. Lanjutkan?"
+  >
+    <div class="flex w-full items-center justify-between gap-3">
+      <VBtn
+        color="primary"
+        @click="handleDeactivate"
+        :loading="isPendingDeactivate"
+        >Ya</VBtn
+      >
+      <VBtn
+        color="error"
+        variant="tonal"
+        @click="handleCloseDeactivateModal"
+        :loading="isPendingDeactivate"
+        >Tidak</VBtn
+      >
+    </div>
+  </ModalConfirmation>
 </template>

@@ -25,7 +25,7 @@ export const useAddPosition = () => {
     mutationFn: addPosition,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['positions'] })
-      toast.success('Unit organisasi berhasil ditambahkan')
+      toast.success('Posisi berhasil ditambahkan')
     },
     onError: error => {
       toast.error(error.message)
@@ -43,7 +43,7 @@ export const useUpdatePosition = (id: Ref<string>) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['positions'] })
-      toast.success('Unit organisasi berhasil diperbarui')
+      toast.success('Posisi berhasil diperbarui')
     },
     onError: error => {
       toast.error(error.message)
@@ -57,7 +57,7 @@ export const useDeletePosition = () => {
     mutationFn: deletePosition,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['positions'] })
-      toast.success('Unit organisasi berhasil dihapus')
+      toast.success('Posisi berhasil dihapus')
     },
     onError: error => {
       toast.error(error.message)

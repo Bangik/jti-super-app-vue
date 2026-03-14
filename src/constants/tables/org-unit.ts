@@ -17,4 +17,5 @@ export const headersHistoryHead = [
   { title: 'Status', key: 'is_active' },
   { title: 'No. SK', key: 'decree_number' },
   { title: 'Catatan', key: 'notes' },
+  { title: 'Aksi', key: 'action' },
 ]

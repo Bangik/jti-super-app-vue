@@ -2,6 +2,7 @@ import {
   addHeadOrgUnit,
   addOrgUnit,
   deleteOrgUnit,
+  deactivateHeadOrgUnit,
   getHistoryHeadById,
   getOrgUnit,
   getOrgUnitAsOptions,
@@ -87,6 +88,20 @@ export const useStoreHeadOrgUnit = (id: Ref<string>) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['org-units', id, 'history'] })
       toast.success('Pejabat unit organisasi berhasil ditambahkan')
+    },
+    onError: error => {
+      toast.error(error.message)
+    },
+  })
+}
+
+export const useDeactivateHeadOrgUnit = (id: Ref<string>) => {
+  const { queryClient, toast } = useMutationResources()
+  return useMutation({
+    mutationFn: (assignmentId: string) => deactivateHeadOrgUnit(id.value, assignmentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['org-units', id, 'history'] })
+      toast.success('Penugasan jabatan berhasil dinonaktifkan')
     },
     onError: error => {
       toast.error(error.message)

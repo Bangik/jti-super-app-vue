@@ -7,6 +7,14 @@ import ModalAddEdit from '@/organism/position/ModalAddEdit.vue'
 import ModalConfirmation from '@/components/modal/ModalConfirmation.vue'
 import type { PositionList } from '@/types/position'
 
+const formatAllowedUnitTypes = (allowedUnitTypes: string[]) => {
+  if (!allowedUnitTypes.length) {
+    return '-'
+  }
+
+  return allowedUnitTypes.join(', ')
+}
+
 const last_page = ref(1)
 const total = ref(0)
 const search = ref('')
@@ -134,6 +142,18 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: PositionList) => {
     >
       <template #item.no="{ index }">{{ index + 1 }}</template>
 
+      <template #item.is_single_holder="{ item }">
+        {{ item.is_single_holder ? 'Ya' : 'Tidak' }}
+      </template>
+
+      <template #item.max_holder="{ item }">
+        {{ item.max_holder ?? '-' }}
+      </template>
+
+      <template #item.allowed_unit_types="{ item }">
+        {{ formatAllowedUnitTypes(item.allowed_unit_types ?? []) }}
+      </template>
+
       <template #item.action="{ item }">
         <IconBtn
           @click="handleOpenModalAddEdit('edit', item)"
@@ -176,8 +196,8 @@ const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: PositionList) => {
   />
   <ModalConfirmation
     v-model="selected.open"
-    :title="`Apakah anda ingin menghapus jurusan ${selected.selectedPosition.name}?`"
-    sub-title="Posisi yang dihapus tidak dapat dikembalikan. dan akan menghapus data yang berhubungan dengan jurusan ini. Lanjutkan?"
+    :title="`Apakah anda ingin menghapus posisi ${selected.selectedPosition.name}?`"
+    sub-title="Posisi yang dihapus tidak dapat dikembalikan dan akan menghapus data yang berhubungan dengan posisi ini. Lanjutkan?"
   >
     <div class="flex w-full items-center justify-between gap-3">
       <VBtn

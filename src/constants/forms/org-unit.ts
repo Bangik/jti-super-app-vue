@@ -15,7 +15,7 @@ export const OrgUnitSchema = yup.object({
 export type OrgUnitValues = yup.InferType<typeof OrgUnitSchema>
 
 export const OrgUnitHeadSchema = yup.object({
-  employee_id: yup.string().uuid().required('Pejabat unit organisasi wajib diisi'),
+  employee_id: yup.string().required('Pejabat unit organisasi wajib diisi'),
   position_id: yup.string().uuid().required('Jabatan wajib diisi'),
   started_at: yup.date().required('Tanggal mulai wajib diisi'),
   ended_at: yup.date().nullable(),
