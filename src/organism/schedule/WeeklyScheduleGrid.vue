@@ -8,13 +8,20 @@ import { useGetEmployeeAsOptions } from '@/hooks/employee'
 import { CLASS_LIST } from '@/constants/student'
 import { DAYS_OF_WEEK } from '@/constants/day'
 import type { WeeklyScheduleFilter, WeeklyScheduleItem, WeeklyTimeSlot } from '@/types/schedule'
+import { useGetSessionAsOptions } from '@/hooks/session'
+import { useGetMajorAsOptions } from '@/hooks/major'
 
 const search = ref('')
+const sessionId = ref<string | undefined>(undefined)
+const majorId = ref<string | undefined>(undefined)
 const semesterId = ref<string | undefined>(undefined)
 const studyProgramId = ref<string | undefined>(undefined)
 const classGroup = ref<string | undefined>(undefined)
 const technicianId = ref<string | undefined>(undefined)
 const selectedDay = ref<string | undefined>(undefined)
+
+const shouldFetchStudyProgram = computed(() => !!majorId.value)
+const shouldFetchSemester = computed(() => !!sessionId.value)
 
 const filter = ref<WeeklyScheduleFilter>({})
 
@@ -35,9 +42,16 @@ watchDebounced(
   },
   { debounce: 600 },
 )
-
-const { data: semesterOptions, isLoading: semesterLoading } = useGetSemesterAsOptions()
-const { data: studyProgramOptions, isLoading: studyProgramLoading } = useGetStudyProgramAsOptions()
+const { data: majorOption, isLoading: isLoadingMajor, isFetching: isFetchingMajor } = useGetMajorAsOptions()
+const { data: sessionOptions, isLoading: isLoadingSession, isFetching: isFetchingSession } = useGetSessionAsOptions()
+const { data: semesterOptions, isLoading: semesterLoading } = useGetSemesterAsOptions(
+  computed(() => sessionId.value || ''),
+  shouldFetchSemester,
+)
+const { data: studyProgramOptions, isLoading: studyProgramLoading } = useGetStudyProgramAsOptions(
+  computed(() => majorId.value || ''),
+  shouldFetchStudyProgram,
+)
 const { data: technicianOptions, isLoading: technicianLoading } = useGetEmployeeAsOptions(undefined, ref('TEKNISI'))
 
 const { data, isLoading, isFetching } = useGetWeeklySchedule(filter)
@@ -87,15 +101,13 @@ const hasData = computed(() => (data.value?.data?.length ?? 0) > 0)
           md
         >
           <VAutocomplete
-            v-model="semesterId"
-            label="Semester"
-            :items="semesterOptions?.data ?? []"
-            :item-title="(item: any) => `${item.semester} – ${item.year}`"
-            item-value="id"
+            v-model="majorId"
+            label="Jurusan"
+            :items="majorOption?.data"
+            item-title="label"
+            item-value="value"
             clearable
-            hide-details
-            density="comfortable"
-            :loading="semesterLoading"
+            :loading="isLoadingMajor || isFetchingMajor"
           />
         </VCol>
         <VCol
@@ -113,8 +125,43 @@ const hasData = computed(() => (data.value?.data?.length ?? 0) > 0)
             hide-details
             density="comfortable"
             :loading="studyProgramLoading"
+            :disabled="!majorId"
           />
         </VCol>
+        <VCol
+          cols="12"
+          sm="6"
+          md
+        >
+          <VAutocomplete
+            label="Tahun Ajaran"
+            v-model="sessionId"
+            :items="sessionOptions?.data"
+            item-title="label"
+            item-value="value"
+            clearable
+            :loading="isLoadingSession || isFetchingSession"
+          />
+        </VCol>
+        <VCol
+          cols="12"
+          sm="6"
+          md
+        >
+          <VAutocomplete
+            v-model="semesterId"
+            label="Semester"
+            :items="semesterOptions?.data ?? []"
+            :item-title="(item: any) => `${item.semester} – ${item.year}`"
+            item-value="id"
+            clearable
+            hide-details
+            density="comfortable"
+            :loading="semesterLoading"
+            :disabled="!sessionId"
+          />
+        </VCol>
+
         <VCol
           cols="12"
           sm="6"
@@ -242,7 +289,7 @@ const hasData = computed(() => (data.value?.data?.length ?? 0) > 0)
               >
                 <!-- Skeleton while loading -->
                 <template v-if="isLoading">
-                  <VSkeleton
+                  <VSkeletonLoader
                     type="chip"
                     class="mb-1"
                   />
