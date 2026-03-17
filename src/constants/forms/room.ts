@@ -5,7 +5,7 @@ export const RoomSchema = yup.object({
   name: yup.string().required('Nama wajib diisi'),
   capacity: yup.number().required('Kapasitas wajib diisi').min(1),
   type: yup.string().required('Tipe wajib dipilih'),
-  lab_id: yup.string().nullable(),
+  org_unit_id: yup.string().nullable(),
   is_active: yup.boolean().default(true),
 })
 

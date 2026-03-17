@@ -29,3 +29,40 @@ export type FilterSchedule = {
   semester_id?: string
   employee_id?: string
 }
+
+export type WeeklyScheduleItem = {
+  schedule_id: string
+  subject_code: string
+  subject_id: string
+  subject_name: string
+  room_id: string
+  room_name: string
+  study_program_id: string
+  study_program_name: string
+  semester_level: number
+  class_group: string
+  start_time: string
+  end_time: string
+  technician_id: string | null
+  technician_name: string | null
+  technician_email: string | null
+}
+
+export type WeeklyTimeSlot = {
+  start_time: string
+  end_time: string
+  schedules: WeeklyScheduleItem[]
+}
+
+export type WeeklyDaySchedule = {
+  day: string
+  time_slots: WeeklyTimeSlot[]
+}
+
+export type WeeklyScheduleFilter = {
+  semester_id?: string
+  study_program_id?: string
+  class_group?: string
+  employee_id?: string
+  search?: string
+}

@@ -1,7 +1,7 @@
 import type { ScheduleValues } from '@/constants/forms/schedule'
 import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { ScheduleList } from '@/types/schedule'
+import type { ScheduleList, WeeklyDaySchedule, WeeklyScheduleFilter } from '@/types/schedule'
 
 const BASE_URL = '/schedules'
 
@@ -29,5 +29,12 @@ export const updateSchedule = async (id: string, payload: ScheduleValues): Promi
 
 export const deleteSchedule = async (id: string): Promise<ResponseType> => {
   const response = await axiosInstance.delete(`${BASE_URL}/${id}`)
+  return response.data
+}
+
+export const getWeeklySchedule = async (params: WeeklyScheduleFilter): Promise<ResponseType<WeeklyDaySchedule[]>> => {
+  const response = await axiosInstance.get(`${BASE_URL}/weekly`, {
+    params,
+  })
   return response.data
 }

@@ -1,6 +1,6 @@
-import { createSchedule, deleteSchedule, getSchedule, getSheduleById, updateSchedule } from '@/services/schedule'
+import { createSchedule, deleteSchedule, getSchedule, getSheduleById, updateSchedule, getWeeklySchedule } from '@/services/schedule'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { ScheduleList } from '@/types/schedule'
+import type { ScheduleList, WeeklyDaySchedule, WeeklyScheduleFilter } from '@/types/schedule'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { ScheduleValues } from '@/constants/forms/schedule'
@@ -63,5 +63,12 @@ export const useDeleteSchedule = () => {
     onError: error => {
       toast.error(error.message)
     },
+  })
+}
+
+export const useGetWeeklySchedule = (params: Ref<WeeklyScheduleFilter>) => {
+  return useQuery<ResponseType<WeeklyDaySchedule[]>, Error>({
+    queryKey: ['weekly-schedules', params],
+    queryFn: () => getWeeklySchedule(params.value),
   })
 }

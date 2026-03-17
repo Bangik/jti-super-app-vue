@@ -1,6 +1,6 @@
 export type Room = {
   id: string
-  lab_id: string | null
+  org_unit_id: string | null
   lab_name?: string | null
   code: string
   name: string

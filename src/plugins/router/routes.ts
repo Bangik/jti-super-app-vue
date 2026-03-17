@@ -437,6 +437,15 @@ export const routes = [
           title: 'Reset Password',
         },
       },
+      {
+        path: 'weekly-schedule',
+        name: 'weekly-schedule',
+        component: () => import('@/pages/schedule/WeeklySchedulePage.vue'),
+        meta: {
+          public: true,
+          title: 'Jadwal Mingguan',
+        },
+      },
       // {
       //   path: '/:pathMatch(.*)*',
       //   component: () => import('@/pages/[...error].vue'),
