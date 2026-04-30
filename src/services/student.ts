@@ -33,7 +33,7 @@ export const addStudent = async (data: StudentValues): Promise<ResponseType> => 
 }
 
 export const updateStudent = async (id: string, data: StudentUpdateValues): Promise<ResponseType> => {
-  const response = await axiosInstance.put(`/students/${id}`, data, {
+  const response = await axiosInstance.post(`/students/${id}/update`, data, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },

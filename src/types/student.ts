@@ -60,6 +60,7 @@ export type StudentDetail = {
   }
   semesters: {
     id: string
+    semester_id?: string
     semester: string
     class: string
     year: string

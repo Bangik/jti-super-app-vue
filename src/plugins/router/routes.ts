@@ -341,6 +341,16 @@ export const routes = [
               back: true,
             },
           },
+          {
+            path: ':studentId/grades/:semesterId',
+            name: 'student.grade-history',
+            component: () => import('@/pages/student/IndexGradeHistoryStudent.vue'),
+            meta: {
+              roles: ['admin', 'superadmin'],
+              title: 'Riwayat Nilai Mahasiswa',
+              back: true,
+            },
+          },
         ],
       },
       {

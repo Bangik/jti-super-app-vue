@@ -126,6 +126,20 @@ const resetAvatar = () => {
   avatarPreview.value = avatar1
 }
 
+const handleGoToGradeHistory = (semesterId?: string) => {
+  if (!props.data?.id || !semesterId) {
+    return
+  }
+
+  router.push({
+    name: 'student.grade-history',
+    params: {
+      studentId: props.data.id,
+      semesterId,
+    },
+  })
+}
+
 const resetFormOnUpdate = () => {
   resetForm({
     values: {
@@ -538,7 +552,19 @@ watch(
                 <td>{{ semester.semester }}</td>
                 <td>{{ semester.class }}</td>
                 <td>{{ semester.year }}</td>
-                <td>{{ semester.session }}</td>
+                <td>
+                  <div class="d-flex align-center gap-2">
+                    <span>{{ semester.session }}</span>
+                    <VBtn
+                      size="small"
+                      variant="tonal"
+                      color="primary"
+                      @click="handleGoToGradeHistory(semester.semester_id || semester.id)"
+                    >
+                      Lihat Nilai
+                    </VBtn>
+                  </div>
+                </td>
               </tr>
             </tbody>
           </VTable>
