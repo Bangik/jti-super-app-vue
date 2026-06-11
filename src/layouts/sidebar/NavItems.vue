@@ -32,6 +32,7 @@ const authStore = useAuthStore()
     :item="{
       title: 'Data Akun',
       icon: 'ri-user-3-line',
+      hidden: !authStore.user.roles?.some(role => ['admin', 'superadmin'].includes(role)),
     }"
   >
     <VerticalNavLink
@@ -50,6 +51,7 @@ const authStore = useAuthStore()
     :item="{
       title: 'Data Master',
       icon: 'ri-database-2-line',
+      hidden: !authStore.user.roles?.some(role => ['admin', 'superadmin'].includes(role)),
     }"
   >
     <VerticalNavLink
@@ -68,6 +70,7 @@ const authStore = useAuthStore()
     :item="{
       title: 'Data Akademik',
       icon: 'ri-book-line',
+      hidden: !authStore.user.roles?.some(role => ['admin', 'superadmin', 'lecturer'].includes(role)),
     }"
   >
     <VerticalNavLink
@@ -86,6 +89,7 @@ const authStore = useAuthStore()
     :item="{
       title: 'Data API',
       icon: 'ri-database-line',
+      hidden: !authStore.user.roles?.some(role => ['admin', 'superadmin'].includes(role)),
     }"
   >
     <VerticalNavLink

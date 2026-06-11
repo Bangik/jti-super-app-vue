@@ -12,6 +12,7 @@ const isOpen = ref(false)
   <li
     class="nav-group"
     :class="isOpen && 'open'"
+    :hidden="item.hidden"
   >
     <div
       class="nav-group-label"

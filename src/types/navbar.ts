@@ -50,6 +50,7 @@ export interface NavGroup extends Partial<AclProperties> {
   badgeClass?: string
   children: (NavLink | NavGroup)[]
   disable?: boolean
+  hidden?: boolean
 }
 
 // 👉 Components ========================
