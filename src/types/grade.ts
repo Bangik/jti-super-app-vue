@@ -4,6 +4,7 @@ export type GradeHistorySubject = {
   attitude_score: number
   credit: number
   final_score: number
+  grade_score: number
   grade_letter: string
   grade_point: number
   midterm_score: number
@@ -37,6 +38,7 @@ export type GradeHistoryData = {
 export type GradeUpdatePayload = {
   assignment_score: number
   attitude_score: number
+  grade_score: number
   final_score: number
   midterm_score: number
   quiz_score: number
@@ -48,6 +50,7 @@ export type GradeUpdateResponse = {
   attitude_score: number
   final_score: number
   grade_id: string
+  grade_score: number
   grade_letter: string
   grade_point: number
   midterm_score: number

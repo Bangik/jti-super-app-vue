@@ -53,7 +53,8 @@ const saveFinalScore = async (semesterId: string, subjectCode: string) => {
   const payload = {
     assignment_score: selectedSubject.assignment_score,
     attitude_score: selectedSubject.attitude_score,
-    final_score: parsedScore,
+    final_score: selectedSubject.final_score,
+    grade_score: parsedScore,
     midterm_score: selectedSubject.midterm_score,
     quiz_score: selectedSubject.quiz_score,
     workshop_score: selectedSubject.workshop_score,
@@ -68,6 +69,7 @@ const saveFinalScore = async (semesterId: string, subjectCode: string) => {
     selectedSubject.assignment_score = response.data?.assignment_score ?? selectedSubject.assignment_score
     selectedSubject.attitude_score = response.data?.attitude_score ?? selectedSubject.attitude_score
     selectedSubject.final_score = response.data?.final_score ?? selectedSubject.final_score
+    selectedSubject.grade_score = response.data?.grade_score ?? selectedSubject.grade_score
     selectedSubject.grade_letter = response.data?.grade_letter ?? selectedSubject.grade_letter
     selectedSubject.grade_point = response.data?.grade_point ?? selectedSubject.grade_point
     selectedSubject.midterm_score = response.data?.midterm_score ?? selectedSubject.midterm_score
@@ -172,6 +174,7 @@ watch(
               <th>Quiz</th>
               <th>Tugas</th>
               <th>UTS</th>
+              <th>UAS</th>
               <th>Workshop</th>
               <th>Sikap</th>
               <th>Nilai Akhir</th>
@@ -191,6 +194,7 @@ watch(
               <td>{{ subject.quiz_score }}</td>
               <td>{{ subject.assignment_score }}</td>
               <td>{{ subject.midterm_score }}</td>
+              <td>{{ subject.final_score }}</td>
               <td>{{ subject.workshop_score }}</td>
               <td>{{ subject.attitude_score }}</td>
               <td>
@@ -211,9 +215,9 @@ watch(
                 <span
                   v-else
                   class="cursor-pointer"
-                  @dblclick="startEditFinalScore(semester.semester_id, subject.subject_code, subject.final_score)"
+                  @dblclick="startEditFinalScore(semester.semester_id, subject.subject_code, subject.grade_score)"
                 >
-                  {{ subject.final_score }}
+                  {{ subject.grade_score }}
                 </span>
               </td>
               <td>{{ subject.grade_letter }}</td>
