@@ -47,3 +47,35 @@ export type SubjectSemesterOption = {
   name: string
   code: string
 }
+
+export type SubjectFiltered = {
+  id: string
+  code: string
+  name: string
+  study_program_id: string
+  study_program_name: string
+  subject_semester_id: string
+  semester_id: string
+  semester_name: string
+  session_id: string
+  session_name: string
+  lectures: Array<{
+    id: string
+    major_id: string | null
+    user: {
+      id: string
+      name: string
+      avatar?: string
+    }
+    subject_lecture_id: string
+  }>
+}
+
+export type FilterSubject = {
+  study_program_id?: string
+  semester_type?: string
+  session_id?: string
+  major_id?: string
+  user_id?: string
+  employee_id?: string
+}

@@ -4,6 +4,7 @@ import type { PageQueryType, ResponseType } from '@/types'
 import type {
   LectureOnSubject,
   SelectedLectureData,
+  SubjectFiltered,
   SubjectList,
   SubjectOption,
   SubjectSemesterOption,
@@ -37,6 +38,13 @@ export const getSubjectSemesterAsOptions = async (
       subject_id: subjectId,
       semester_id: semesterId,
     },
+  })
+  return response.data
+}
+
+export const getSubjectFiltered = async (PageQuery: PageQueryType): Promise<ResponseType<SubjectFiltered[]>> => {
+  const response = await axiosInstance.get(`/subjects/filtered`, {
+    params: { ...PageQuery },
   })
   return response.data
 }

@@ -4,6 +4,7 @@ import {
   getLectureOnSubject,
   getSubject,
   getSubjectAsOptions,
+  getSubjectFiltered,
   getSubjectSemesterAsOptions,
   storeLectureOnSubject,
   updateSubject,
@@ -12,6 +13,7 @@ import type { PageQueryType, ResponseType } from '@/types'
 import type {
   LectureOnSubject,
   SelectedLectureData,
+  SubjectFiltered,
   SubjectList,
   SubjectOption,
   SubjectSemesterOption,
@@ -62,6 +64,13 @@ export const useGetLectureOnSubject = (
     queryKey: ['subjects', 'lectures', studyProgramId, semesterId],
     queryFn: () => getLectureOnSubject(studyProgramId?.value ?? '', semesterId?.value ?? ''),
     enabled,
+  })
+}
+
+export const useGetSubjectFiltered = (pageQuery: Ref<PageQueryType>) => {
+  return useQuery<ResponseType<SubjectFiltered[]>, Error>({
+    queryKey: ['subjects', 'filtered', pageQuery],
+    queryFn: () => getSubjectFiltered(pageQuery.value),
   })
 }
 

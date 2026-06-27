@@ -387,6 +387,16 @@ export const routes = [
               back: false,
             },
           },
+          {
+            path: 'subject-lecture',
+            name: 'subject.subject-lecture',
+            component: () => import('@/pages/subject/SubjectLecture.vue'),
+            meta: {
+              roles: ['admin', 'superadmin', 'lecturer'],
+              title: 'Mata Kuliah yang Diampu',
+              back: false,
+            },
+          },
         ],
       },
       {
