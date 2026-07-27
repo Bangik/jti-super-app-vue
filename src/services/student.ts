@@ -41,6 +41,14 @@ export const updateStudent = async (id: string, data: StudentUpdateValues): Prom
   return response.data
 }
 
+export const syncPolijeStudents = async (majorId: string, studyProgramId: string): Promise<ResponseType> => {
+  const response = await axiosInstance.post(`/students/sync-polije`, {
+    major_id: majorId,
+    study_program_id: studyProgramId,
+  })
+  return response.data
+}
+
 export const getStudentById = async (id: string): Promise<ResponseType<StudentDetail>> => {
   const response = await axiosInstance.get(`/students/${id}`)
   return response.data

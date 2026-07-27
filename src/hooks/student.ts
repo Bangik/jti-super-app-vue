@@ -1,9 +1,24 @@
-import { addStudent, getStudent, getStudentAsOptions, getStudentById, updateStudent } from '@/services/student'
+import { addStudent, getStudent, getStudentAsOptions, getStudentById, syncPolijeStudents, updateStudent } from '@/services/student'
 import type { ResponseType, PageQueryType } from '@/types'
 import type { StudentDetail, StudentList, StudentOptions } from '@/types/student'
 import { useMutation, useQuery } from '@tanstack/vue-query'
 import { useMutationResources } from './toast-query-client'
 import type { StudentUpdateValues } from '@/constants/forms/student'
+
+export const useSyncPolijeStudents = () => {
+  const { queryClient, toast } = useMutationResources()
+  return useMutation({
+    mutationFn: ({ majorId, studyProgramId }: { majorId: string; studyProgramId: string }) =>
+      syncPolijeStudents(majorId, studyProgramId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['students'] })
+      toast.success('Sync mahasiswa Polije berhasil dijalankan di background')
+    },
+    onError: error => {
+      toast.error(error.message || 'Gagal sinkronisasi mahasiswa Polije')
+    },
+  })
+}
 
 export const useGetStudent = (pageQuery: Ref<PageQueryType>) => {
   return useQuery<ResponseType<StudentList[]>, Error>({

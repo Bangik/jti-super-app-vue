@@ -4,10 +4,12 @@ import { headers } from '@/constants/tables/student'
 import { useGetMajorAsOptions } from '@/hooks/major'
 import { useGetSemesterAsOptions } from '@/hooks/semester'
 import { useGetSessionAsOptions } from '@/hooks/session'
-import { useGetStudent } from '@/hooks/student'
+import { useGetStudent, useSyncPolijeStudents } from '@/hooks/student'
 import { useGetStudyProgramAsOptions } from '@/hooks/study-program'
 import type { PageQueryType, SortItem } from '@/types'
 import type { FilterStudent, StudentList } from '@/types/student'
+
+const { mutate: syncStudents, isPending: isSyncing } = useSyncPolijeStudents()
 
 const last_page = ref(1)
 const total = ref(0)
@@ -132,6 +134,16 @@ const handleOpenModalDelete = (item: StudentList) => {
   selected.open = true
 }
 
+const isSyncEnabled = computed(() => !!filter.value.major_id && !!filter.value.study_program_id)
+
+const handleSyncPolije = () => {
+  if (!isSyncEnabled.value) return
+  syncStudents({
+    majorId: filter.value.major_id!,
+    studyProgramId: filter.value.study_program_id!,
+  })
+}
+
 // const handleOpenModalAddEdit = (type: 'add' | 'edit', data?: StudentList) => {
 //   selected.type = type
 //   selected.selectedStudent = data ? { ...data } : ({} as StudentList)
@@ -194,12 +206,20 @@ const handleOpenModalDelete = (item: StudentList) => {
       />
     </VCardText>
     <div class="d-flex justify-between align-center items-center">
-      <VCardText>
+      <VCardText class="d-flex gap-2">
         <VBtn
           color="primary"
           @click="$router.push({ name: 'student.create' })"
         >
           Tambah Mahasiswa
+        </VBtn>
+        <VBtn
+          color="secondary"
+          :disabled="!isSyncEnabled"
+          :loading="isSyncing"
+          @click="handleSyncPolije"
+        >
+          Sync Polije
         </VBtn>
       </VCardText>
       <VTextField
