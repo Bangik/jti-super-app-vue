@@ -78,3 +78,22 @@ export type StudentOptions = {
   id: string
   name: string
 }
+
+export type StudentSyncDetail = {
+  student_id: string
+  nim: string
+  name: string
+  status: 'pending' | 'processing' | 'success' | 'failed'
+  message: string
+}
+
+export type SyncJobStatusResponse = {
+  job_id: string
+  status: 'pending' | 'processing' | 'success' | 'failed'
+  total: number
+  processed: number
+  success: number
+  failed: number
+  queue_size: number
+  details: StudentSyncDetail[]
+}

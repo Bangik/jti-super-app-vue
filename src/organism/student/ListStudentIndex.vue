@@ -4,12 +4,35 @@ import { headers } from '@/constants/tables/student'
 import { useGetMajorAsOptions } from '@/hooks/major'
 import { useGetSemesterAsOptions } from '@/hooks/semester'
 import { useGetSessionAsOptions } from '@/hooks/session'
-import { useGetStudent, useSyncPolijeStudents } from '@/hooks/student'
+import { useGetStudent, useSyncPolijeStudents, useGetStudentSyncStatus } from '@/hooks/student'
 import { useGetStudyProgramAsOptions } from '@/hooks/study-program'
 import type { PageQueryType, SortItem } from '@/types'
 import type { FilterStudent, StudentList } from '@/types/student'
 
-const { mutate: syncStudents, isPending: isSyncing } = useSyncPolijeStudents()
+const activeJobId = ref<string | undefined>(undefined)
+const hasActiveJob = ref(false)
+const isPollingEnabled = computed(() => hasActiveJob.value || !!activeJobId.value)
+
+const { data: syncJobStatus } = useGetStudentSyncStatus(activeJobId, isPollingEnabled)
+
+watch(
+  () => syncJobStatus.value?.data,
+  (data) => {
+    if (data) {
+      hasActiveJob.value = data.status === 'processing' || data.status === 'pending'
+    } else {
+      hasActiveJob.value = false // don't poll if no active job returned (or job not found)
+    }
+  },
+  { immediate: true }
+)
+
+const { mutate: syncStudents, isPending: isSyncing } = useSyncPolijeStudents((res: any) => {
+  if (res?.data?.job_id) {
+    activeJobId.value = res.data.job_id
+    hasActiveJob.value = true
+  }
+})
 
 const last_page = ref(1)
 const total = ref(0)
@@ -153,6 +176,26 @@ const handleSyncPolije = () => {
 
 <template>
   <VCard>
+    <VCardText v-if="syncJobStatus?.data && (syncJobStatus.data.status === 'processing' || syncJobStatus.data.status === 'pending')">
+      <VAlert
+        type="info"
+        variant="tonal"
+        closable
+      >
+        <div class="d-flex align-center justify-between flex-wrap gap-2">
+          <span>
+            Sinkronisasi sedang berjalan: {{ syncJobStatus.data.processed }} / {{ syncJobStatus.data.total }} mahasiswa selesai.
+            <span v-if="syncJobStatus.data.failed > 0">(Gagal: {{ syncJobStatus.data.failed }})</span>
+          </span>
+          <VProgressLinear
+            indeterminate
+            color="info"
+            class="mt-2"
+          />
+        </div>
+      </VAlert>
+    </VCardText>
+
     <VCardItem>
       <VCardTitle class="text-lg">Filter</VCardTitle>
     </VCardItem>

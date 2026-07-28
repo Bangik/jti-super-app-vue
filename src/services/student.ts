@@ -1,7 +1,7 @@
 import type { StudentUpdateValues, StudentValues } from '@/constants/forms/student'
 import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { StudentDetail, StudentList, StudentOptions } from '@/types/student'
+import type { StudentDetail, StudentList, StudentOptions, SyncJobStatusResponse } from '@/types/student'
 
 export async function getStudent(PageQuery: PageQueryType): Promise<ResponseType<StudentList[]>> {
   const response = await axiosInstance.get(`/students`, {
@@ -45,6 +45,13 @@ export const syncPolijeStudents = async (majorId: string, studyProgramId: string
   const response = await axiosInstance.post(`/students/sync-polije`, {
     major_id: majorId,
     study_program_id: studyProgramId,
+  })
+  return response.data
+}
+
+export const getStudentSyncStatus = async (jobId?: string): Promise<ResponseType<SyncJobStatusResponse>> => {
+  const response = await axiosInstance.get(`/students/sync-status`, {
+    params: { job_id: jobId },
   })
   return response.data
 }
