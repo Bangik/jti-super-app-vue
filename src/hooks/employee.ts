@@ -7,6 +7,10 @@ import {
   getEmployeeAsOptions,
   getEmployeeById,
   getStudentSupervisors,
+  getSupervisorsByStudent,
+  updateSupervisorsByStudent,
+  type StudentSupervisorItem,
+  type UpdateStudentSupervisorsPayload,
   updateEmployee,
 } from '@/services/employee'
 import type { PageQueryType, ResponseType } from '@/types'
@@ -115,6 +119,29 @@ export const useAddSupervisorStudent = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['supervisor-students'] })
       toast.success('Mahasiswa berhasil ditambahkan')
+    },
+    onError: error => {
+      toast.error(error.message)
+    },
+  })
+}
+
+export const useGetSupervisorsByStudent = (studentId: Ref<string>, enabled: Ref<boolean>) => {
+  return useQuery<ResponseType<StudentSupervisorItem[]>, Error>({
+    queryKey: ['student-supervisors', studentId],
+    queryFn: () => getSupervisorsByStudent(studentId.value),
+    enabled,
+  })
+}
+
+export const useUpdateSupervisorsByStudent = (studentId: Ref<string>) => {
+  const { queryClient, toast } = useMutationResources()
+  return useMutation({
+    mutationFn: (data: UpdateStudentSupervisorsPayload) => updateSupervisorsByStudent(studentId.value, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['student-supervisors'] })
+      queryClient.invalidateQueries({ queryKey: ['supervisor-students'] })
+      toast.success('Pembimbing berhasil diperbarui')
     },
     onError: error => {
       toast.error(error.message)

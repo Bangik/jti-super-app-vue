@@ -1,7 +1,7 @@
 import type { EmployeeValues, SupervisorStudentValues } from '@/constants/forms/employee'
 import axiosInstance from '@/lib/axiosInstance'
 import type { PageQueryType, ResponseType } from '@/types'
-import type { EmployeeDetail, EmployeeList, EmployeeOption, Position, SupervisorStudentList } from '@/types/employee'
+import type { EmployeeDetail, EmployeeList, EmployeeOption, Position, SupervisorPosition, SupervisorStudentList } from '@/types/employee'
 
 export const getEmployee = async (PageQuery: PageQueryType): Promise<ResponseType<EmployeeList[]>> => {
   const response = await axiosInstance.get(`/employees`, {
@@ -80,4 +80,25 @@ export const deleteStudentSupervisor = (id: string): Promise<ResponseType<void>>
 
 export const addStudentSupervisor = (data: SupervisorStudentValues): Promise<ResponseType> => {
   return axiosInstance.post(`/supervisor-lectures`, data).then(response => response.data)
+}
+
+export type StudentSupervisorItem = {
+  id: string
+  employee_id: string
+  name: string
+  position: SupervisorPosition
+  is_manual: boolean
+}
+
+export type UpdateStudentSupervisorsPayload = Partial<Record<Lowercase<SupervisorPosition>, string>>
+
+export const getSupervisorsByStudent = (studentId: string): Promise<ResponseType<StudentSupervisorItem[]>> => {
+  return axiosInstance.get(`/supervisor-lectures/student/${studentId}`).then(response => response.data)
+}
+
+export const updateSupervisorsByStudent = (
+  studentId: string,
+  data: UpdateStudentSupervisorsPayload,
+): Promise<ResponseType> => {
+  return axiosInstance.put(`/supervisor-lectures/student/${studentId}`, data).then(response => response.data)
 }

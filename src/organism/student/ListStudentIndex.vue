@@ -8,6 +8,7 @@ import { useGetStudent, useSyncPolijeStudents, useGetStudentSyncStatus } from '@
 import { useGetStudyProgramAsOptions } from '@/hooks/study-program'
 import type { PageQueryType, SortItem } from '@/types'
 import type { FilterStudent, StudentList } from '@/types/student'
+import ModalSupervisorStudent from './ModalSupervisorStudent.vue'
 
 const activeJobId = ref<string | undefined>(undefined)
 const hasActiveJob = ref(false)
@@ -155,6 +156,13 @@ const handleOpenModalDelete = (item: StudentList) => {
   selected.selectedStudent = item
   selected.type = 'delete'
   selected.open = true
+}
+
+const supervisorDialog = ref(false)
+
+const handleOpenModalSupervisor = (item: StudentList) => {
+  selected.selectedStudent = item
+  supervisorDialog.value = true
 }
 
 const isSyncEnabled = computed(() => !!filter.value.major_id && !!filter.value.study_program_id)
@@ -333,6 +341,21 @@ const handleSyncPolije = () => {
 
         <IconBtn
           class="mr-2"
+          @click="handleOpenModalSupervisor(item)"
+          color="info"
+        >
+          <VIcon icon="ri-user-star-line" />
+          <VTooltip
+            activator="parent"
+            open-delay="300"
+            scroll-strategy="close"
+          >
+            <span>Atur Pembimbing</span>
+          </VTooltip>
+        </IconBtn>
+
+        <IconBtn
+          class="mr-2"
           @click="handleOpenModalDelete(item)"
           color="error"
         >
@@ -347,5 +370,10 @@ const handleSyncPolije = () => {
         </IconBtn>
       </template>
     </VDataTableServer>
+    <ModalSupervisorStudent
+      v-model="supervisorDialog"
+      :student-id="selected.selectedStudent.id"
+      :student-name="selected.selectedStudent.name"
+    />
   </VCard>
 </template>
